@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.hooman.incident.entity.Incident;
 import com.hooman.incident.request.IncidentRequest;
-import com.hooman.incident.response.Incident;
 import com.hooman.incident.service.api.IIncidentService;
 
 @Controller

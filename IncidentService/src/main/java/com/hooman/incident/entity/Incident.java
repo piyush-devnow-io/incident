@@ -1,37 +1,63 @@
-package com.hooman.incident.response;
+package com.hooman.incident.entity;
 
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+import com.hooman.incident.incidentidentity.IncidentIdentity;
+
+@Entity
+@Table(name = "incident")
 public class Incident {
-	String tenantId;
-	String incidentId;
+
+	@EmbeddedId
+	IncidentIdentity incidentIdentity;
+
+	@Column(name = "user_id")
 	String userId;
+	@Column(name = "subject")
 	String subject;
+	@Column(name = "criteria1")
 	String criteria1;
+	@Column(name = "criteria2")
 	String criteria2;
+	@Column(name = "criteria3")
 	String criteria3;
+	@Column(name = "criteria4")
 	String criteria4;
+	@Column(name = "criteria5")
 	String criteria5;
+	@Column(name = "criteria6")
 	String criteria6;
+	@Column(name = "criteria7")
 	String criteria7;
+	@Column(name = "criteria8")
 	String criteria8;
+	@Column(name = "criteria9")
 	String criteria9;
+	@Column(name = "criteria10")
 	String criteria10;
-	List<String> assignedTeamIds;
-	Map<String, Map<String, Long>> teamIdVsUserIdVsResponseTime;
+
+	@Column(name = "assigned_team_entity_id")
+	String assignedTeamEntityId;
+
+	@Column(name = "incident_response_entity_id")
+	String incidentResponseEntityId;
 
 	public Incident() {
 		super();
 	}
 
-	public Incident(String tenantId, String incidentId, String userId, String subject, String criteria1,
+	public Incident(IncidentIdentity incidentIdentity, String userId, String subject, String criteria1,
 			String criteria2, String criteria3, String criteria4, String criteria5, String criteria6, String criteria7,
-			String criteria8, String criteria9, String criteria10, List<String> assignedTeamIds,
-			Map<String, Map<String, Long>> teamIdVsUserIdVsResponseTime) {
+			String criteria8, String criteria9, String criteria10, String assignedTeamEntityId,
+			String incidentResponseEntityId) {
 		super();
-		this.tenantId = tenantId;
-		this.incidentId = incidentId;
+		this.incidentIdentity = incidentIdentity;
 		this.userId = userId;
 		this.subject = subject;
 		this.criteria1 = criteria1;
@@ -44,24 +70,24 @@ public class Incident {
 		this.criteria8 = criteria8;
 		this.criteria9 = criteria9;
 		this.criteria10 = criteria10;
-		this.assignedTeamIds = assignedTeamIds;
-		this.teamIdVsUserIdVsResponseTime = teamIdVsUserIdVsResponseTime;
+		this.assignedTeamEntityId = assignedTeamEntityId;
+		this.incidentResponseEntityId = incidentResponseEntityId;
 	}
 
-	public String getTenantId() {
-		return tenantId;
+	public String getIncidentResponseEntityId() {
+		return incidentResponseEntityId;
 	}
 
-	public void setTenantId(String tenantId) {
-		this.tenantId = tenantId;
+	public void setIncidentResponseEntityId(String incidentResponseEntityId) {
+		this.incidentResponseEntityId = incidentResponseEntityId;
 	}
 
-	public String getIncidentId() {
-		return incidentId;
+	public IncidentIdentity getIncidentIdentity() {
+		return incidentIdentity;
 	}
 
-	public void setIncidentId(String incidentId) {
-		this.incidentId = incidentId;
+	public void setIncidentIdentity(IncidentIdentity incidentIdentity) {
+		this.incidentIdentity = incidentIdentity;
 	}
 
 	public String getUserId() {
@@ -160,19 +186,13 @@ public class Incident {
 		this.criteria10 = criteria10;
 	}
 
-	public List<String> getAssignedTeamIds() {
-		return assignedTeamIds;
+	public String getAssignedTeamEntityId() {
+		return assignedTeamEntityId;
 	}
 
-	public void setAssignedTeamIds(List<String> assignedTeamIds) {
-		this.assignedTeamIds = assignedTeamIds;
+	public void setAssignedTeamEntityId(String assignedTeamEntityId) {
+		this.assignedTeamEntityId = assignedTeamEntityId;
 	}
 
-	public Map<String, Map<String, Long>> getTeamIdVsUserIdVsResponseTime() {
-		return teamIdVsUserIdVsResponseTime;
-	}
 
-	public void setTeamIdVsUserIdVsResponseTime(Map<String, Map<String, Long>> teamIdVsUserIdVsResponseTime) {
-		this.teamIdVsUserIdVsResponseTime = teamIdVsUserIdVsResponseTime;
-	}
 }
