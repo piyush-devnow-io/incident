@@ -23,5 +23,4 @@ public interface IIncidentService {
 
 	List<Incident> getAllIncidentAssignedToTeam(String tenantId, String teamId);
 
-	Map<String, Map<String, Long>> getAllResponseTimeForIncident(String incidentId);
 }

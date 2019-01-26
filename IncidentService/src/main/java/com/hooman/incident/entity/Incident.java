@@ -1,52 +1,63 @@
 package com.hooman.incident.entity;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.hooman.incident.incidentidentity.IncidentIdentity;
 
+import io.swagger.annotations.ApiModelProperty;
+
 @Entity
-@Table(name = "incident")
+@Table(name = "incident_details")
 public class Incident {
 
 	@EmbeddedId
 	IncidentIdentity incidentIdentity;
 
+	@ApiModelProperty(notes = "Id of the user who created the incident", name = "userId", required = true, value = "userid")
 	@Column(name = "user_id")
 	String userId;
+	@ApiModelProperty(notes = "Subject of the incident", name = "subject", required = false, value = "test subject")
 	@Column(name = "subject")
 	String subject;
+	 @ApiModelProperty(notes = "Criteria 1 String",name="criteria1",required=false,value="test criteria")
 	@Column(name = "criteria1")
 	String criteria1;
+	 @ApiModelProperty(notes = "Criteria 2 String",name="criteria2",required=false,value="test criteria")
 	@Column(name = "criteria2")
 	String criteria2;
+	 @ApiModelProperty(notes = "Criteria 3 String",name="criteria3",required=false,value="test criteria")
 	@Column(name = "criteria3")
 	String criteria3;
+	 @ApiModelProperty(notes = "Criteria 4 String",name="criteria4",required=false,value="test criteria")
 	@Column(name = "criteria4")
 	String criteria4;
+	 @ApiModelProperty(notes = "Criteria 5 String",name="criteria5",required=false,value="test criteria")
 	@Column(name = "criteria5")
 	String criteria5;
+	 @ApiModelProperty(notes = "Criteria 6 String",name="criteria6",required=false,value="test criteria")
 	@Column(name = "criteria6")
 	String criteria6;
+	 @ApiModelProperty(notes = "Criteria 7 String",name="criteria7",required=false,value="test criteria")
 	@Column(name = "criteria7")
 	String criteria7;
+	 @ApiModelProperty(notes = "Criteria 8 String",name="criteria8",required=false,value="test criteria")
 	@Column(name = "criteria8")
 	String criteria8;
+	 @ApiModelProperty(notes = "Criteria 9 String",name="criteria9",required=false,value="test criteria")
 	@Column(name = "criteria9")
 	String criteria9;
+	 @ApiModelProperty(notes = "Criteria 10 String",name="criteria10",required=false,value="test criteria")
 	@Column(name = "criteria10")
 	String criteria10;
 
-	@Column(name = "assigned_team_entity_id")
-	String assignedTeamEntityId;
-
-	@Column(name = "incident_response_entity_id")
-	String incidentResponseEntityId;
+	@OneToOne(mappedBy = "listOfTeamIds")
+	List<String> assignedTeamEntityIds;
 
 	public Incident() {
 		super();
@@ -54,8 +65,7 @@ public class Incident {
 
 	public Incident(IncidentIdentity incidentIdentity, String userId, String subject, String criteria1,
 			String criteria2, String criteria3, String criteria4, String criteria5, String criteria6, String criteria7,
-			String criteria8, String criteria9, String criteria10, String assignedTeamEntityId,
-			String incidentResponseEntityId) {
+			String criteria8, String criteria9, String criteria10, List<String> assignedTeamEntityId) {
 		super();
 		this.incidentIdentity = incidentIdentity;
 		this.userId = userId;
@@ -70,16 +80,7 @@ public class Incident {
 		this.criteria8 = criteria8;
 		this.criteria9 = criteria9;
 		this.criteria10 = criteria10;
-		this.assignedTeamEntityId = assignedTeamEntityId;
-		this.incidentResponseEntityId = incidentResponseEntityId;
-	}
-
-	public String getIncidentResponseEntityId() {
-		return incidentResponseEntityId;
-	}
-
-	public void setIncidentResponseEntityId(String incidentResponseEntityId) {
-		this.incidentResponseEntityId = incidentResponseEntityId;
+		this.assignedTeamEntityIds = assignedTeamEntityIds;
 	}
 
 	public IncidentIdentity getIncidentIdentity() {
@@ -186,13 +187,12 @@ public class Incident {
 		this.criteria10 = criteria10;
 	}
 
-	public String getAssignedTeamEntityId() {
-		return assignedTeamEntityId;
+	public List<String> getAssignedTeamEntityIds() {
+		return assignedTeamEntityIds;
 	}
 
-	public void setAssignedTeamEntityId(String assignedTeamEntityId) {
-		this.assignedTeamEntityId = assignedTeamEntityId;
+	public void setAssignedTeamEntityIds(List<String> assignedTeamEntityIds) {
+		this.assignedTeamEntityIds = assignedTeamEntityIds;
 	}
-
 
 }

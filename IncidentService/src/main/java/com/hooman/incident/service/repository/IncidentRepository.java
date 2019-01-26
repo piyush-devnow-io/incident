@@ -19,7 +19,7 @@ public interface IncidentRepository extends JpaRepository<Incident, IncidentIden
 	@Query("SELECT p FROM IncidentTeam p WHERE tenantId = :tenantId and teamId = :teamId")
 	List<Incident> getAllIncidentsAssignedToTeam(@Param("tenantId") String tenantId, @Param("teamId") String teamId);
 
-	@Query("SELECT p FROM Person p WHERE LOWER(p.lastName) = LOWER(:lastName)")
-	String getAllResponseTimeForIncident(String incidentId);
+//	@Query("SELECT p FROM Person p WHERE LOWER(p.lastName) = LOWER(:lastName)")
+//	String getAllResponseTimeForIncident(@Param("tenantId") String tenantId, @Param("incidentId") String incidentId);
 
 }

@@ -4,13 +4,17 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.validation.constraints.NotNull;
 
+import io.swagger.annotations.ApiModelProperty;
+
 @Embeddable
 public class IncidentIdentity {
 
+	@ApiModelProperty(notes = "incident id", name = "incidentId", required = false, value = "test id")
 	@NotNull
 	@Column(name = "incident_id")
 	String incidentId;
 
+	@ApiModelProperty(notes = "tenant id", name = "tenantId", required = false, value = "test id")
 	@NotNull
 	@Column(name = "tenant_id")
 	Integer tenantId;
