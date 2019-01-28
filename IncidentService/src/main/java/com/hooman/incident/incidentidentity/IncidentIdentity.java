@@ -2,10 +2,12 @@ package com.hooman.incident.incidentidentity;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
 
 import io.swagger.annotations.ApiModelProperty;
 
+@Entity
 @Embeddable
 public class IncidentIdentity {
 

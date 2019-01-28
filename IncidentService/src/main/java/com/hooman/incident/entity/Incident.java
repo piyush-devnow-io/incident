@@ -25,39 +25,39 @@ public class Incident {
 	@ApiModelProperty(notes = "Subject of the incident", name = "subject", required = false, value = "test subject")
 	@Column(name = "subject")
 	String subject;
-	 @ApiModelProperty(notes = "Criteria 1 String",name="criteria1",required=false,value="test criteria")
+	@ApiModelProperty(notes = "Criteria 1 String", name = "criteria1", required = false, value = "test criteria")
 	@Column(name = "criteria1")
 	String criteria1;
-	 @ApiModelProperty(notes = "Criteria 2 String",name="criteria2",required=false,value="test criteria")
+	@ApiModelProperty(notes = "Criteria 2 String", name = "criteria2", required = false, value = "test criteria")
 	@Column(name = "criteria2")
 	String criteria2;
-	 @ApiModelProperty(notes = "Criteria 3 String",name="criteria3",required=false,value="test criteria")
+	@ApiModelProperty(notes = "Criteria 3 String", name = "criteria3", required = false, value = "test criteria")
 	@Column(name = "criteria3")
 	String criteria3;
-	 @ApiModelProperty(notes = "Criteria 4 String",name="criteria4",required=false,value="test criteria")
+	@ApiModelProperty(notes = "Criteria 4 String", name = "criteria4", required = false, value = "test criteria")
 	@Column(name = "criteria4")
 	String criteria4;
-	 @ApiModelProperty(notes = "Criteria 5 String",name="criteria5",required=false,value="test criteria")
+	@ApiModelProperty(notes = "Criteria 5 String", name = "criteria5", required = false, value = "test criteria")
 	@Column(name = "criteria5")
 	String criteria5;
-	 @ApiModelProperty(notes = "Criteria 6 String",name="criteria6",required=false,value="test criteria")
+	@ApiModelProperty(notes = "Criteria 6 String", name = "criteria6", required = false, value = "test criteria")
 	@Column(name = "criteria6")
 	String criteria6;
-	 @ApiModelProperty(notes = "Criteria 7 String",name="criteria7",required=false,value="test criteria")
+	@ApiModelProperty(notes = "Criteria 7 String", name = "criteria7", required = false, value = "test criteria")
 	@Column(name = "criteria7")
 	String criteria7;
-	 @ApiModelProperty(notes = "Criteria 8 String",name="criteria8",required=false,value="test criteria")
+	@ApiModelProperty(notes = "Criteria 8 String", name = "criteria8", required = false, value = "test criteria")
 	@Column(name = "criteria8")
 	String criteria8;
-	 @ApiModelProperty(notes = "Criteria 9 String",name="criteria9",required=false,value="test criteria")
+	@ApiModelProperty(notes = "Criteria 9 String", name = "criteria9", required = false, value = "test criteria")
 	@Column(name = "criteria9")
 	String criteria9;
-	 @ApiModelProperty(notes = "Criteria 10 String",name="criteria10",required=false,value="test criteria")
+	@ApiModelProperty(notes = "Criteria 10 String", name = "criteria10", required = false, value = "test criteria")
 	@Column(name = "criteria10")
 	String criteria10;
 
 	@OneToOne(mappedBy = "listOfTeamIds")
-	List<String> assignedTeamEntityIds;
+	IncidentAssignedTeamEntity incidentAssignedTeamEntity;
 
 	public Incident() {
 		super();
@@ -65,7 +65,8 @@ public class Incident {
 
 	public Incident(IncidentIdentity incidentIdentity, String userId, String subject, String criteria1,
 			String criteria2, String criteria3, String criteria4, String criteria5, String criteria6, String criteria7,
-			String criteria8, String criteria9, String criteria10, List<String> assignedTeamEntityId) {
+			String criteria8, String criteria9, String criteria10,
+			IncidentAssignedTeamEntity incidentAssignedTeamEntity) {
 		super();
 		this.incidentIdentity = incidentIdentity;
 		this.userId = userId;
@@ -80,7 +81,7 @@ public class Incident {
 		this.criteria8 = criteria8;
 		this.criteria9 = criteria9;
 		this.criteria10 = criteria10;
-		this.assignedTeamEntityIds = assignedTeamEntityIds;
+		this.incidentAssignedTeamEntity = incidentAssignedTeamEntity;
 	}
 
 	public IncidentIdentity getIncidentIdentity() {
@@ -187,12 +188,12 @@ public class Incident {
 		this.criteria10 = criteria10;
 	}
 
-	public List<String> getAssignedTeamEntityIds() {
-		return assignedTeamEntityIds;
+	public IncidentAssignedTeamEntity getIncidentAssignedTeamEntity() {
+		return incidentAssignedTeamEntity;
 	}
 
-	public void setAssignedTeamEntityIds(List<String> assignedTeamEntityIds) {
-		this.assignedTeamEntityIds = assignedTeamEntityIds;
+	public void setIncidentAssignedTeamEntity(IncidentAssignedTeamEntity incidentAssignedTeamEntity) {
+		this.incidentAssignedTeamEntity = incidentAssignedTeamEntity;
 	}
 
 }

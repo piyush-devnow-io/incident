@@ -4,10 +4,9 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.OneToMany;
+import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.websocket.OnClose;
 
 import io.swagger.annotations.ApiModelProperty;
 
@@ -16,6 +15,7 @@ import io.swagger.annotations.ApiModelProperty;
 public class IncidentAssignedTeamEntity {
 	 @ApiModelProperty(notes = "incident assigned team entity id",name="id",required=false,value="test id")
 	@Column(name = "id")
+	 @Id
 	private String id;
 	 @ApiModelProperty(notes = "incident id",name="incidentId",required=false,value="test id")
 	@Column(name = "incident_id")

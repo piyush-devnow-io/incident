@@ -24,7 +24,6 @@ import io.swagger.annotations.ApiResponses;
 
 @Api(value = "IncidentController", description = "REST APIs related to Incident Entity!!!!",produces="application/json")
 @RestController
-@RequestMapping(value = "/incident/")
 public class IncidentController {
 
 	@Autowired
@@ -37,7 +36,7 @@ public class IncidentController {
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Success|OK"),
 			@ApiResponse(code = 401, message = "not authorized!"), @ApiResponse(code = 403, message = "forbidden!!!"),
 			@ApiResponse(code = 404, message = "not found!!!") })
-	@RequestMapping(value = "/create", method = RequestMethod.POST)
+	@RequestMapping(value = "/incident/create", method = RequestMethod.POST)
 
 	Incident createNewIncident(@RequestHeader String authenticationToken, IncidentRequest request) {
 		return incidentService.createNewIncident(request.getTenantId(), request.getUserId(), request.getSubject(),
@@ -50,18 +49,17 @@ public class IncidentController {
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Success|OK"),
 			@ApiResponse(code = 401, message = "not authorized!"), @ApiResponse(code = 403, message = "forbidden!!!"),
 			@ApiResponse(code = 404, message = "not found!!!") })
-	@RequestMapping(value = "/", method = RequestMethod.GET)
-
-	Incident getIncident(@RequestHeader String authenticationToken, @RequestParam("tenantId") String tenantId,
-			@RequestParam("incidentId") String incidentId) {
-		return incidentService.getIncident(tenantId, incidentId);
+	@RequestMapping(value = "/incident", method = RequestMethod.GET)
+	Incident getIncident(@RequestHeader String authenticationToken, @RequestParam("tenantId") Integer tenantId,
+			@RequestParam("incidentId") Integer incidentId) {
+		return incidentService.getIncident(String.valueOf(tenantId), String.valueOf(incidentId));
 	}
 
 	@ApiOperation(value = "Delete an incident by id", response = Void.class, tags = "deleteIncident")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Success|OK"),
 			@ApiResponse(code = 401, message = "not authorized!"), @ApiResponse(code = 403, message = "forbidden!!!"),
 			@ApiResponse(code = 404, message = "not found!!!") })
-	@RequestMapping(value = "/delete", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/incident/delete", method = RequestMethod.DELETE)
 	void deleteIncident(@RequestHeader String authenticationToken, @RequestParam("tenantId") String tenantId,
 			@RequestParam("incidentId") String incidentId) {
 		incidentService.deleteIncident(tenantId, incidentId);
@@ -72,7 +70,7 @@ public class IncidentController {
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Success|OK"),
 			@ApiResponse(code = 401, message = "not authorized!"), @ApiResponse(code = 403, message = "forbidden!!!"),
 			@ApiResponse(code = 404, message = "not found!!!") })
-	@RequestMapping(value = "/update", method = RequestMethod.POST)
+	@RequestMapping(value = "/incident/update", method = RequestMethod.POST)
 
 	Incident updateIncident(@RequestHeader String authenticationToken, @RequestParam("incidentId") String incidentId,
 			@RequestParam("request") IncidentRequest request) {
@@ -86,7 +84,7 @@ public class IncidentController {
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Success|OK"),
 			@ApiResponse(code = 401, message = "not authorized!"), @ApiResponse(code = 403, message = "forbidden!!!"),
 			@ApiResponse(code = 404, message = "not found!!!") })
-	@RequestMapping(value = "/getAllIncident", method = RequestMethod.GET)
+	@RequestMapping(value = "/incident/getAllIncident", method = RequestMethod.GET)
 
 	List<Incident> getAllIncident(@RequestHeader String authenticationToken,
 			@RequestParam("tenantId") String tenantId) {
@@ -97,7 +95,7 @@ public class IncidentController {
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Success|OK"),
 			@ApiResponse(code = 401, message = "not authorized!"), @ApiResponse(code = 403, message = "forbidden!!!"),
 			@ApiResponse(code = 404, message = "not found!!!") })
-	@RequestMapping(value = "/getAllIncidentAssignedToTeam", method = RequestMethod.GET)
+	@RequestMapping(value = "/incident/getAllIncidentAssignedToTeam", method = RequestMethod.GET)
 
 	List<Incident> getAllIncidentAssignedToTeam(@RequestHeader String authenticationToken,
 			@RequestParam("tenantId") String tenantId, @RequestParam("teamId") String teamId) {
@@ -108,7 +106,7 @@ public class IncidentController {
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Success|OK"),
 			@ApiResponse(code = 401, message = "not authorized!"), @ApiResponse(code = 403, message = "forbidden!!!"),
 			@ApiResponse(code = 404, message = "not found!!!") })
-	@RequestMapping(value = "/getAllResponseTimeForIncident", method = RequestMethod.GET)
+	@RequestMapping(value = "/incident/getAllResponseTimeForIncident", method = RequestMethod.GET)
 
 	Map<String, Map<String, Long>> getAllResponseTimeForIncident(@RequestHeader String authenticationToken,
 			@RequestParam("tenantId") Integer tenantId, @RequestParam("incidentId") String incidentId) {
@@ -120,7 +118,7 @@ public class IncidentController {
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Success|OK"),
 			@ApiResponse(code = 401, message = "not authorized!"), @ApiResponse(code = 403, message = "forbidden!!!"),
 			@ApiResponse(code = 404, message = "not found!!!") })
-	@RequestMapping(value = "/provideResponseTime", method = RequestMethod.PUT)
+	@RequestMapping(value = "/incident/provideResponseTime", method = RequestMethod.PUT)
 
 	public void provideResponseTimeForIncident(@RequestHeader String authenticationToken,
 			@RequestParam("tenantId") Integer tenantId, @RequestParam("incidentId") String incidentId,
