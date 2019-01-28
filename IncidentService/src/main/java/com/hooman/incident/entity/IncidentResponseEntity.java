@@ -1,16 +1,17 @@
-package com.hooman.incident.incidentidentity;
-
-import java.util.List;
+package com.hooman.incident.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "incident_response_details")
 public class IncidentResponseEntity {
 
+	@Id
+	String id;
 	@Embedded
 	IncidentIdentity incidentIdentity;
 
@@ -21,8 +22,9 @@ public class IncidentResponseEntity {
 		super();
 	}
 
-	public IncidentResponseEntity(IncidentIdentity incidentIdentity, String teamIdVsUserIdVsResponseTime) {
+	public IncidentResponseEntity(String id,IncidentIdentity incidentIdentity, String teamIdVsUserIdVsResponseTime) {
 		super();
+		this.id = id;
 		this.incidentIdentity = incidentIdentity;
 		this.teamIdVsUserIdVsResponseTime = teamIdVsUserIdVsResponseTime;
 	}
@@ -41,6 +43,14 @@ public class IncidentResponseEntity {
 
 	public void setTeamIdVsUserIdVsResponseTime(String teamIdVsUserIdVsResponseTime) {
 		this.teamIdVsUserIdVsResponseTime = teamIdVsUserIdVsResponseTime;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 }

@@ -1,4 +1,6 @@
-package com.hooman.incident.incidentidentity;
+package com.hooman.incident.entity;
+
+import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -7,9 +9,8 @@ import javax.validation.constraints.NotNull;
 
 import io.swagger.annotations.ApiModelProperty;
 
-@Entity
 @Embeddable
-public class IncidentIdentity {
+public class IncidentIdentity implements Serializable{
 
 	@ApiModelProperty(notes = "incident id", name = "incidentId", required = false, value = "test id")
 	@NotNull

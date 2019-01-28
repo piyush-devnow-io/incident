@@ -22,9 +22,9 @@ public class SwaggerConfig {
 	}
 
 	private ApiInfo apiInfo() {
-		return new ApiInfoBuilder().title("JavaInUse API").description("JavaInUse API reference for developers")
-				.termsOfServiceUrl("http://javainuse.com").contact("javainuse@gmail.com").license("JavaInUse License")
-				.licenseUrl("javainuse@gmail.com").version("1.0").build();
+		return new ApiInfoBuilder().title("Incidet API").description("Incident API for reference")
+				.termsOfServiceUrl("http://devnow.io").contact("piyush@devnow.io").license("DevNow")
+				.licenseUrl("piyush@devnow.io").version("1.0").build();
 	}
 
 //    private Predicate<String> postPaths() {

@@ -1,13 +1,12 @@
 package com.hooman.incident.service.impl;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hooman.incident.entity.Incident;
-import com.hooman.incident.incidentidentity.IncidentIdentity;
+import com.hooman.incident.entity.IncidentIdentity;
 import com.hooman.incident.service.api.IIncidentService;
 import com.hooman.incident.service.repository.IncidentRepository;
 import com.hooman.incident.service.repository.IncidentResponseRepository;
@@ -18,7 +17,7 @@ public class IncidentServiceImpl implements IIncidentService {
 
 	@Autowired
 	IncidentRepository incidentRepository;
-	
+
 	@Autowired
 	IncidentResponseRepository incidentResponseRepository;
 
@@ -71,7 +70,7 @@ public class IncidentServiceImpl implements IIncidentService {
 		incident.setCriteria7(criteria7);
 		incident.setCriteria8(criteria8);
 		incident.setCriteria9(criteria9);
-		incident.getAssignedTeamEntityIds().addAll(assignedTeamIds);
+//		incident.getIncidentAssignedTeamEntity().getListOfTeamIds().addAll(assignedTeamIds);
 		return incident;
 	}
 
@@ -85,16 +84,12 @@ public class IncidentServiceImpl implements IIncidentService {
 		return incidentRepository.getAllIncidentsAssignedToTeam(tenantId, teamId);
 	}
 
-	
-
 	private Incident getNewIncident(IncidentIdentity identity, String userId, String subject, String criteria1,
 			String criteria2, String criteria3, String criteria4, String criteria5, String criteria6, String criteria7,
 			String criteria8, String criteria9, String criteria10, List<String> assignedTeamIds) {
 		Incident incident = new Incident(identity, userId, subject, criteria1, criteria2, criteria3, criteria4,
-				criteria5, criteria6, criteria7, criteria8, criteria9, criteria10, assignedTeamIds);
+				criteria5, criteria6, criteria7, criteria8, criteria9, criteria10, null);
 		return incident;
 	}
-
-
 
 }

@@ -1,14 +1,12 @@
 package com.hooman.incident.entity;
 
-import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-
-import com.hooman.incident.incidentidentity.IncidentIdentity;
 
 import io.swagger.annotations.ApiModelProperty;
 
@@ -56,7 +54,8 @@ public class Incident {
 	@Column(name = "criteria10")
 	String criteria10;
 
-	@OneToOne(mappedBy = "listOfTeamIds")
+	@OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "incidentIdentity")
 	IncidentAssignedTeamEntity incidentAssignedTeamEntity;
 
 	public Incident() {

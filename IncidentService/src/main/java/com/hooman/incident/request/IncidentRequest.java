@@ -1,7 +1,6 @@
 package com.hooman.incident.request;
 
 import java.util.List;
-import java.util.Map;
 
 public class IncidentRequest {
 	String tenantId;

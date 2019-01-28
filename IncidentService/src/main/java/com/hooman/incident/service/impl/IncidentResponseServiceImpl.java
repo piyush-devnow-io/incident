@@ -5,13 +5,15 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import com.hooman.incident.incidentidentity.IncidentIdentity;
-import com.hooman.incident.incidentidentity.IncidentResponseEntity;
+import com.hooman.incident.entity.IncidentIdentity;
+import com.hooman.incident.entity.IncidentResponseEntity;
 import com.hooman.incident.request.ResponseDetails;
 import com.hooman.incident.service.api.IIncidentResponseService;
 import com.hooman.incident.service.repository.IncidentResponseRepository;
 
+@Service
 public class IncidentResponseServiceImpl implements IIncidentResponseService {
 
 	@Autowired

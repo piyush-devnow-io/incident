@@ -1,10 +1,8 @@
 package com.hooman.incident.service.api;
 
 import java.util.List;
-import java.util.Map;
 
 import com.hooman.incident.entity.Incident;
-import com.hooman.incident.request.IncidentRequest;
 
 public interface IIncidentService {
 	Incident createNewIncident(String tenantId, String userId, String subject, String criteria1, String criteria2,
