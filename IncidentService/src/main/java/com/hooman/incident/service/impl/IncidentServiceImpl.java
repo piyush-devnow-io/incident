@@ -1,11 +1,13 @@
 package com.hooman.incident.service.impl;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hooman.incident.entity.Incident;
+import com.hooman.incident.entity.IncidentAssignedTeamEntity;
 import com.hooman.incident.entity.IncidentIdentity;
 import com.hooman.incident.service.api.IIncidentService;
 import com.hooman.incident.service.repository.IncidentRepository;
@@ -22,12 +24,12 @@ public class IncidentServiceImpl implements IIncidentService {
 	IncidentResponseRepository incidentResponseRepository;
 
 	@Override
-	public Incident createNewIncident(String tenantId, String userId, String subject, String criteria1,
+	public Incident createNewIncident(Integer tenantId, String userId, String subject, String criteria1,
 			String criteria2, String criteria3, String criteria4, String criteria5, String criteria6, String criteria7,
 			String criteria8, String criteria9, String criteria10, List<String> assignedTeamIds) {
 		// perform validation
 		String incidentId = IncidentUtils.getIncidentId();
-		IncidentIdentity identity = new IncidentIdentity(incidentId, Integer.parseInt(tenantId));
+		IncidentIdentity identity = new IncidentIdentity(incidentId, tenantId);
 		Incident incident = getNewIncident(identity, userId, subject, criteria1, criteria2, criteria3, criteria4,
 				criteria5, criteria6, criteria7, criteria8, criteria9, criteria10, assignedTeamIds);
 		return incidentRepository.save(incident);
@@ -46,10 +48,10 @@ public class IncidentServiceImpl implements IIncidentService {
 	}
 
 	@Override
-	public Incident updateIncident(String incidentId, String tenantId, String userId, String subject, String criteria1,
+	public Incident updateIncident(String incidentId, Integer tenantId, String userId, String subject, String criteria1,
 			String criteria2, String criteria3, String criteria4, String criteria5, String criteria6, String criteria7,
 			String criteria8, String criteria9, String criteria10, List<String> assignedTeamIds) {
-		IncidentIdentity identity = new IncidentIdentity(incidentId, Integer.parseInt(tenantId));
+		IncidentIdentity identity = new IncidentIdentity(incidentId, tenantId);
 		Incident incident = incidentRepository.getOne(identity);
 		Incident updatedIncident = updateIncident(incident, userId, subject, criteria1, criteria2, criteria3, criteria4,
 				criteria5, criteria6, criteria7, criteria8, criteria9, criteria10, assignedTeamIds);
@@ -87,8 +89,12 @@ public class IncidentServiceImpl implements IIncidentService {
 	private Incident getNewIncident(IncidentIdentity identity, String userId, String subject, String criteria1,
 			String criteria2, String criteria3, String criteria4, String criteria5, String criteria6, String criteria7,
 			String criteria8, String criteria9, String criteria10, List<String> assignedTeamIds) {
+		IncidentAssignedTeamEntity assignedTeamEntity = new IncidentAssignedTeamEntity();
+		assignedTeamEntity.setIncidentIdentity(identity);
+		assignedTeamEntity.setTeamId(new String[] {"1"});
+		assignedTeamEntity.setId(identity.getIncidentId());
 		Incident incident = new Incident(identity, userId, subject, criteria1, criteria2, criteria3, criteria4,
-				criteria5, criteria6, criteria7, criteria8, criteria9, criteria10, null);
+				criteria5, criteria6, criteria7, criteria8, criteria9, criteria10, assignedTeamEntity);
 		return incident;
 	}
 

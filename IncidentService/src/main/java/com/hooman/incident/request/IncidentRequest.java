@@ -3,7 +3,7 @@ package com.hooman.incident.request;
 import java.util.List;
 
 public class IncidentRequest {
-	String tenantId;
+	Integer tenantId;
 	String userId;
 	String subject;
 	String criteria1;
@@ -22,7 +22,7 @@ public class IncidentRequest {
 		super();
 	}
 
-	public IncidentRequest(String tenantId, String userId, String subject, String criteria1, String criteria2,
+	public IncidentRequest(Integer tenantId, String userId, String subject, String criteria1, String criteria2,
 			String criteria3, String criteria4, String criteria5, String criteria6, String criteria7, String criteria8,
 			String criteria9, String criteria10, List<String> assignedTeamIds) {
 		super();
@@ -42,11 +42,11 @@ public class IncidentRequest {
 		this.assignedTeamIds = assignedTeamIds;
 	}
 
-	public String getTenantId() {
+	public Integer getTenantId() {
 		return tenantId;
 	}
 
-	public void setTenantId(String tenantId) {
+	public void setTenantId(Integer tenantId) {
 		this.tenantId = tenantId;
 	}
 

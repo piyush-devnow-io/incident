@@ -3,7 +3,10 @@ package com.hooman.incident.controller;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,10 +24,12 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-@Api(value = "IncidentController", description = "REST APIs related to Incident Entity!!!!",produces="application/json")
+@Api(value = "IncidentController", description = "REST APIs related to Incident Entity!!!!", produces = "application/json")
 @RestController
 public class IncidentController {
 
+	private static final Logger logger = LoggerFactory.getLogger(IncidentController.class);
+	
 	@Autowired
 	IIncidentService incidentService;
 
@@ -37,7 +42,7 @@ public class IncidentController {
 			@ApiResponse(code = 404, message = "not found!!!") })
 	@RequestMapping(value = "/incident/create", method = RequestMethod.POST)
 
-	Incident createNewIncident(@RequestHeader String authenticationToken, IncidentRequest request) {
+	Incident createNewIncident(@RequestHeader String authenticationToken, @RequestBody IncidentRequest request) {
 		return incidentService.createNewIncident(request.getTenantId(), request.getUserId(), request.getSubject(),
 				request.getCriteria1(), request.getCriteria2(), request.getCriteria3(), request.getCriteria4(),
 				request.getCriteria5(), request.getCriteria6(), request.getCriteria7(), request.getCriteria8(),
@@ -51,6 +56,8 @@ public class IncidentController {
 	@RequestMapping(value = "/incident", method = RequestMethod.GET)
 	Incident getIncident(@RequestHeader String authenticationToken, @RequestParam("tenantId") Integer tenantId,
 			@RequestParam("incidentId") Integer incidentId) {
+		
+		logger.info("request to get incident");
 		return incidentService.getIncident(String.valueOf(tenantId), String.valueOf(incidentId));
 	}
 
