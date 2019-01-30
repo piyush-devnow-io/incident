@@ -1,15 +1,16 @@
 package com.hooman.incident.service.impl;
 
-import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hooman.incident.entity.Incident;
 import com.hooman.incident.entity.IncidentAssignedTeamEntity;
-import com.hooman.incident.entity.IncidentIdentity;
 import com.hooman.incident.service.api.IIncidentService;
+import com.hooman.incident.service.repository.IncidentAssignedTeamRepository;
 import com.hooman.incident.service.repository.IncidentRepository;
 import com.hooman.incident.service.repository.IncidentResponseRepository;
 import com.hooman.incident.utils.IncidentUtils;
@@ -22,6 +23,9 @@ public class IncidentServiceImpl implements IIncidentService {
 
 	@Autowired
 	IncidentResponseRepository incidentResponseRepository;
+	
+	@Autowired
+	IncidentAssignedTeamRepository incidentAssignedTeamRepository;
 
 	@Override
 	public Incident createNewIncident(Integer tenantId, String userId, String subject, String criteria1,
@@ -29,30 +33,36 @@ public class IncidentServiceImpl implements IIncidentService {
 			String criteria8, String criteria9, String criteria10, List<String> assignedTeamIds) {
 		// perform validation
 		String incidentId = IncidentUtils.getIncidentId();
-		IncidentIdentity identity = new IncidentIdentity(incidentId, tenantId);
-		Incident incident = getNewIncident(identity, userId, subject, criteria1, criteria2, criteria3, criteria4,
-				criteria5, criteria6, criteria7, criteria8, criteria9, criteria10, assignedTeamIds);
-		return incidentRepository.save(incident);
+		Incident incident = getNewIncident(tenantId, incidentId, userId, subject, criteria1, criteria2, criteria3,
+				criteria4, criteria5, criteria6, criteria7, criteria8, criteria9, criteria10, assignedTeamIds);
+		Incident savedIncident = incidentRepository.save(incident);
+		for (String teamId : assignedTeamIds) {
+			IncidentAssignedTeamEntity entity = new IncidentAssignedTeamEntity();
+			entity.setIncidentId(incidentId);
+			entity.setTenantId(tenantId);
+			entity.setTeamId(teamId);
+			incidentAssignedTeamRepository.save(entity);
+		}
+		return savedIncident;
 	}
 
 	@Override
-	public Incident getIncident(String tenantId, String incidentId) {
-		IncidentIdentity identity = new IncidentIdentity(incidentId, Integer.parseInt(tenantId));
-		return incidentRepository.getOne(identity);
+	public Incident getIncident(Integer tenantId, String incidentId) {
+		return incidentRepository.getOne(incidentId);
 	}
 
 	@Override
 	public void deleteIncident(String tenantId, String incidentId) {
-		IncidentIdentity identity = new IncidentIdentity(incidentId, Integer.parseInt(tenantId));
-		incidentRepository.deleteById(identity);
+		incidentRepository.deleteById(incidentId);
+		incidentAssignedTeamRepository.deleteById(incidentId);
+		return;
 	}
 
 	@Override
 	public Incident updateIncident(String incidentId, Integer tenantId, String userId, String subject, String criteria1,
 			String criteria2, String criteria3, String criteria4, String criteria5, String criteria6, String criteria7,
 			String criteria8, String criteria9, String criteria10, List<String> assignedTeamIds) {
-		IncidentIdentity identity = new IncidentIdentity(incidentId, tenantId);
-		Incident incident = incidentRepository.getOne(identity);
+		Incident incident = incidentRepository.getOne(incidentId);
 		Incident updatedIncident = updateIncident(incident, userId, subject, criteria1, criteria2, criteria3, criteria4,
 				criteria5, criteria6, criteria7, criteria8, criteria9, criteria10, assignedTeamIds);
 		return incidentRepository.save(incident);
@@ -77,24 +87,37 @@ public class IncidentServiceImpl implements IIncidentService {
 	}
 
 	@Override
-	public List<Incident> getAllIncident(String tenantId) {
-		return incidentRepository.findByIncidentIdentityTenantId(tenantId);
+	public List<Incident> getAllIncident(Integer tenantId) {
+		return incidentRepository.findByIncidentTenantId(tenantId);
 	}
 
 	@Override
-	public List<Incident> getAllIncidentAssignedToTeam(String tenantId, String teamId) {
-		return incidentRepository.getAllIncidentsAssignedToTeam(tenantId, teamId);
+	public List<Incident> getAllIncidentAssignedToTeam(Integer tenantId, String teamId) {
+		List<String> allIncidentsAssignedToTeam = incidentAssignedTeamRepository.getAllIncidentsAssignedToTeam(tenantId, teamId);
+		List<Incident> findAllById = incidentRepository.findAllById(allIncidentsAssignedToTeam);
+		return findAllById;
 	}
 
-	private Incident getNewIncident(IncidentIdentity identity, String userId, String subject, String criteria1,
-			String criteria2, String criteria3, String criteria4, String criteria5, String criteria6, String criteria7,
-			String criteria8, String criteria9, String criteria10, List<String> assignedTeamIds) {
+	private Incident getNewIncident(Integer tenantId, String incidentId, String userId, String subject,
+			String criteria1, String criteria2, String criteria3, String criteria4, String criteria5, String criteria6,
+			String criteria7, String criteria8, String criteria9, String criteria10, List<String> assignedTeamIds) {
+		Set<IncidentAssignedTeamEntity> set = new HashSet<>();
 		IncidentAssignedTeamEntity assignedTeamEntity = new IncidentAssignedTeamEntity();
-		assignedTeamEntity.setIncidentIdentity(identity);
-		assignedTeamEntity.setTeamId(new String[] {"1"});
-		assignedTeamEntity.setId(identity.getIncidentId());
-		Incident incident = new Incident(identity, userId, subject, criteria1, criteria2, criteria3, criteria4,
-				criteria5, criteria6, criteria7, criteria8, criteria9, criteria10, assignedTeamEntity);
+//		assignedTeamEntity.setIncidentId(incidentId);
+//		assignedTeamEntity.setTenantId(tenantId);
+		assignedTeamEntity.setTeamId("1");
+		IncidentAssignedTeamEntity assignedTeamEntity2 = new IncidentAssignedTeamEntity();
+//		assignedTeamEntity2.setIncidentId(incidentId);
+//		assignedTeamEntity2.setTenantId(tenantId);
+		assignedTeamEntity2.setTeamId("1");
+		set.add(assignedTeamEntity);
+		set.add(assignedTeamEntity2);
+
+//		assignedTeamEntity.setId(identity.getIncidentId());
+		Incident incident = new Incident(tenantId, incidentId, userId, subject, criteria1, criteria2, criteria3,
+				criteria4, criteria5, criteria6, criteria7, criteria8, criteria9, criteria10);
+//		assignedTeamEntity.setIncident(incident);
+//		assignedTeamEntity2.setIncident(incident);
 		return incident;
 	}
 

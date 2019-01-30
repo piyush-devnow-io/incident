@@ -8,16 +8,14 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.hooman.incident.entity.Incident;
-import com.hooman.incident.entity.IncidentIdentity;
 
 @Repository
-public interface IncidentRepository extends JpaRepository<Incident, IncidentIdentity> {
+public interface IncidentRepository extends JpaRepository<Incident, String> {
 
-	List<Incident> findByIncidentIdentityTenantId(String tenantId);
+	@Query("SELECT p FROM Incident p WHERE p.tenantId = :tenantId")
+	List<Incident> findByIncidentTenantId(Integer tenantId);
 
-	@Query("SELECT p FROM Incident p WHERE tenantId = :tenantId and teamId = :teamId")
-	List<Incident> getAllIncidentsAssignedToTeam(@Param("tenantId") String tenantId, @Param("teamId") String teamId);
-
+	
 //	@Query("SELECT p FROM Person p WHERE LOWER(p.lastName) = LOWER(:lastName)")
 //	String getAllResponseTimeForIncident(@Param("tenantId") String tenantId, @Param("incidentId") String incidentId);
 

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hooman.incident.entity.Incident;
+import com.hooman.incident.entity.IncidentResponseEntity;
 import com.hooman.incident.request.IncidentRequest;
 import com.hooman.incident.request.ResponseDetails;
 import com.hooman.incident.service.api.IIncidentResponseService;
@@ -29,7 +30,7 @@ import io.swagger.annotations.ApiResponses;
 public class IncidentController {
 
 	private static final Logger logger = LoggerFactory.getLogger(IncidentController.class);
-	
+
 	@Autowired
 	IIncidentService incidentService;
 
@@ -55,10 +56,10 @@ public class IncidentController {
 			@ApiResponse(code = 404, message = "not found!!!") })
 	@RequestMapping(value = "/incident", method = RequestMethod.GET)
 	Incident getIncident(@RequestHeader String authenticationToken, @RequestParam("tenantId") Integer tenantId,
-			@RequestParam("incidentId") Integer incidentId) {
-		
+			@RequestParam("incidentId") String incidentId) {
+
 		logger.info("request to get incident");
-		return incidentService.getIncident(String.valueOf(tenantId), String.valueOf(incidentId));
+		return incidentService.getIncident(tenantId, incidentId);
 	}
 
 	@ApiOperation(value = "Delete an incident by id", response = Void.class, tags = "deleteIncident")
@@ -93,7 +94,7 @@ public class IncidentController {
 	@RequestMapping(value = "/incident/getAllIncident", method = RequestMethod.GET)
 
 	List<Incident> getAllIncident(@RequestHeader String authenticationToken,
-			@RequestParam("tenantId") String tenantId) {
+			@RequestParam("tenantId") Integer tenantId) {
 		return incidentService.getAllIncident(tenantId);
 	}
 
@@ -104,7 +105,7 @@ public class IncidentController {
 	@RequestMapping(value = "/incident/getAllIncidentAssignedToTeam", method = RequestMethod.GET)
 
 	List<Incident> getAllIncidentAssignedToTeam(@RequestHeader String authenticationToken,
-			@RequestParam("tenantId") String tenantId, @RequestParam("teamId") String teamId) {
+			@RequestParam("tenantId") Integer tenantId, @RequestParam("teamId") String teamId) {
 		return incidentService.getAllIncidentAssignedToTeam(tenantId, teamId);
 	}
 
@@ -116,8 +117,7 @@ public class IncidentController {
 
 	Map<String, Map<String, Long>> getAllResponseTimeForIncident(@RequestHeader String authenticationToken,
 			@RequestParam("tenantId") Integer tenantId, @RequestParam("incidentId") String incidentId) {
-		incidentResponseService.getAllResponsesForIncidentId(tenantId, incidentId);
-		return null;
+		return incidentResponseService.getAllResponsesForIncidentId(tenantId, incidentId);
 	}
 
 	@ApiOperation(value = "provide response time for an incident", response = Void.class, tags = "provideResponseTimeForIncident")

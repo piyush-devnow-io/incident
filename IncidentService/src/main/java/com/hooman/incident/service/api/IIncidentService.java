@@ -9,7 +9,7 @@ public interface IIncidentService {
 			String criteria3, String criteria4, String criteria5, String criteria6, String criteria7, String criteria8,
 			String criteria9, String criteria10, List<String> assignedTeamIds);
 
-	Incident getIncident(String tenantId, String incidentId);
+	Incident getIncident(Integer tenantId, String incidentId);
 
 	void deleteIncident(String tenantId, String incidentId);
 
@@ -17,8 +17,8 @@ public interface IIncidentService {
 			String criteria2, String criteria3, String criteria4, String criteria5, String criteria6, String criteria7,
 			String criteria8, String criteria9, String criteria10, List<String> assignedTeamIds);
 
-	List<Incident> getAllIncident(String tenantId);
+	List<Incident> getAllIncident(Integer tenantId);
 
-	List<Incident> getAllIncidentAssignedToTeam(String tenantId, String teamId);
+	List<Incident> getAllIncidentAssignedToTeam(Integer tenantId, String teamId);
 
 }

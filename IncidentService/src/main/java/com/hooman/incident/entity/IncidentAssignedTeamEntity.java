@@ -1,62 +1,73 @@
 package com.hooman.incident.entity;
 
-import javax.persistence.CascadeType;
+import java.io.Serializable;
+
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "incident_assignment_details")
-public class IncidentAssignedTeamEntity {
+public class IncidentAssignedTeamEntity implements Serializable {
 
 	@Id
-	String id;
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	Long id;
 
-	@Embedded
-	IncidentIdentity incidentIdentity;
+	@Column(name = "tenant_id")
+	Integer tenantId;
+
+	@Column(name = "incident_id")
+	String incidentId;
 
 	public IncidentAssignedTeamEntity() {
 		super();
 	}
 
-	public IncidentAssignedTeamEntity(String id, IncidentIdentity incidentIdentity, String[] teamId) {
+	public IncidentAssignedTeamEntity(Long id, Integer tenantId, String incidentId, String teamId) {
 		super();
 		this.id = id;
-		this.incidentIdentity = incidentIdentity;
+		this.tenantId = tenantId;
+		this.incidentId = incidentId;
+//		this.id = id;
 		this.teamId = teamId;
 	}
 
-	@OneToOne(mappedBy = "incidentAssignedTeamEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
-	private Incident incident;
-
 	@Column(name = "list_of_team_ids")
-	private String[] teamId;
+	private String teamId;
 
-	public String[] getTeamId() {
+	public String getTeamId() {
 		return teamId;
 	}
 
-	public void setTeamId(String[] teamId) {
+	public void setTeamId(String teamId) {
 		this.teamId = teamId;
 	}
 
-	public IncidentIdentity getIncidentIdentity() {
-		return incidentIdentity;
+	public Integer getTenantId() {
+		return tenantId;
 	}
 
-	public void setIncidentIdentity(IncidentIdentity incidentIdentity) {
-		this.incidentIdentity = incidentIdentity;
+	public void setTenantId(Integer tenantId) {
+		this.tenantId = tenantId;
 	}
 
-	public String getId() {
+	public String getIncidentId() {
+		return incidentId;
+	}
+
+	public void setIncidentId(String incidentId) {
+		this.incidentId = incidentId;
+	}
+
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 }

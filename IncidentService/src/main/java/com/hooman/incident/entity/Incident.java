@@ -1,12 +1,12 @@
 package com.hooman.incident.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import io.swagger.annotations.ApiModelProperty;
 
@@ -14,8 +14,16 @@ import io.swagger.annotations.ApiModelProperty;
 @Table(name = "incident_details")
 public class Incident {
 
-	@EmbeddedId
-	IncidentIdentity incidentIdentity;
+	@ApiModelProperty(notes = "incident id", name = "incidentId", required = false, value = "test id")
+	@NotNull
+	@Id
+	@Column(name = "incident_id")
+	String incidentId;
+
+	@ApiModelProperty(notes = "tenant id", name = "tenantId", required = false, value = "test id")
+	@NotNull
+	@Column(name = "tenant_id")
+	Integer tenantId;
 
 	@ApiModelProperty(notes = "Id of the user who created the incident", name = "userId", required = true, value = "userid")
 	@Column(name = "user_id")
@@ -54,20 +62,16 @@ public class Incident {
 	@Column(name = "criteria10")
 	String criteria10;
 
-	@OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "incidentIdentity")
-	IncidentAssignedTeamEntity incidentAssignedTeamEntity;
-
 	public Incident() {
 		super();
 	}
 
-	public Incident(IncidentIdentity incidentIdentity, String userId, String subject, String criteria1,
+	public Incident(Integer tenantId, String incidentId, String userId, String subject, String criteria1,
 			String criteria2, String criteria3, String criteria4, String criteria5, String criteria6, String criteria7,
-			String criteria8, String criteria9, String criteria10,
-			IncidentAssignedTeamEntity incidentAssignedTeamEntity) {
+			String criteria8, String criteria9, String criteria10) {
 		super();
-		this.incidentIdentity = incidentIdentity;
+		this.tenantId = tenantId;
+		this.incidentId = incidentId;
 		this.userId = userId;
 		this.subject = subject;
 		this.criteria1 = criteria1;
@@ -80,15 +84,6 @@ public class Incident {
 		this.criteria8 = criteria8;
 		this.criteria9 = criteria9;
 		this.criteria10 = criteria10;
-		this.incidentAssignedTeamEntity = incidentAssignedTeamEntity;
-	}
-
-	public IncidentIdentity getIncidentIdentity() {
-		return incidentIdentity;
-	}
-
-	public void setIncidentIdentity(IncidentIdentity incidentIdentity) {
-		this.incidentIdentity = incidentIdentity;
 	}
 
 	public String getUserId() {
@@ -187,12 +182,20 @@ public class Incident {
 		this.criteria10 = criteria10;
 	}
 
-	public IncidentAssignedTeamEntity getIncidentAssignedTeamEntity() {
-		return incidentAssignedTeamEntity;
+	public String getIncidentId() {
+		return incidentId;
 	}
 
-	public void setIncidentAssignedTeamEntity(IncidentAssignedTeamEntity incidentAssignedTeamEntity) {
-		this.incidentAssignedTeamEntity = incidentAssignedTeamEntity;
+	public void setIncidentId(String incidentId) {
+		this.incidentId = incidentId;
+	}
+
+	public Integer getTenantId() {
+		return tenantId;
+	}
+
+	public void setTenantId(Integer tenantId) {
+		this.tenantId = tenantId;
 	}
 
 }
