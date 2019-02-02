@@ -1,7 +1,9 @@
 package com.hooman.incident.service.impl;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -53,17 +55,18 @@ public class IncidentResponseServiceImpl implements IIncidentResponseService {
 	}
 
 	@Override
-	public IncidentResponseDetails getAllResponsesForIncidentId(Integer tenantId, String incidentId) {
-		Optional<IncidentResponseEntity> incidentResponseEntity = incidentResponseRepository.findById(incidentId);
-		if (incidentResponseEntity.isPresent()) {
+	public List<IncidentResponseDetails> getAllResponsesForIncidentId(Integer tenantId, List<String> incidentId) {
+		List<IncidentResponseEntity> incidentResponseEntityList = incidentResponseRepository.findAllById(incidentId);
+		List<IncidentResponseDetails> list = new ArrayList<>();
+		for (IncidentResponseEntity entity : incidentResponseEntityList) {
 			IncidentResponseDetails response = new IncidentResponseDetails();
 			response.setTenantId(tenantId);
-			response.setIncidentId(incidentId);
-			String teamIdVsUserIdVsResponseTime = incidentResponseEntity.get().getTeamIdVsUserIdVsResponseTime();
+			response.setIncidentId(entity.getIncidentId());
+			String teamIdVsUserIdVsResponseTime = entity.getTeamIdVsUserIdVsResponseTime();
 			response.setResponse(convertStringToMap(teamIdVsUserIdVsResponseTime));
-			return response;
+			list.add(response);
 		}
-		return null;
+		return list;
 	}
 
 	private String convertMapIntoString(Map<String, Map<String, Integer>> map) {
@@ -85,6 +88,23 @@ public class IncidentResponseServiceImpl implements IIncidentResponseService {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	@Override
+	public Map<String, Integer> getAllResponsesForIncidentIdByUserIdTeamId(Integer tenantId, String userId, String teamId,
+			List<String> listOfIncidentIds) {
+		List<IncidentResponseDetails> allResponsesDetails = getAllResponsesForIncidentId(tenantId, listOfIncidentIds);
+		Map<String, Integer> userIdVsResponseTimeMap = new HashMap<>();
+		for (IncidentResponseDetails responseDetails : allResponsesDetails) {
+			String incidentId = responseDetails.getIncidentId();
+			Map<String, Map<String, Integer>> response = responseDetails.getResponse();
+			if (response.get(teamId) != null) {
+				if (response.get(teamId).get(userId) != null) {
+					userIdVsResponseTimeMap.put(incidentId, response.get(teamId).get(userId));
+				}
+			}
+		}
+		return userIdVsResponseTimeMap;
 	}
 
 }

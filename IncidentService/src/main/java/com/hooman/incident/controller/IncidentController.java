@@ -1,6 +1,8 @@
 package com.hooman.incident.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hooman.incident.entity.Incident;
 import com.hooman.incident.request.IncidentRequest;
 import com.hooman.incident.request.ResponseDetails;
+import com.hooman.incident.response.IncidentDetails;
 import com.hooman.incident.response.IncidentResponseDetails;
 import com.hooman.incident.service.api.IIncidentResponseService;
 import com.hooman.incident.service.api.IIncidentService;
@@ -60,7 +63,7 @@ public class IncidentController {
 	@RequestMapping(value = "/incident", method = RequestMethod.GET)
 	Incident getIncident(@RequestHeader String authenticationToken, @RequestParam("tenantId") Integer tenantId,
 			@RequestParam("incidentId") String incidentId) {
-		Assert.notNull(tenantId, "tenantId cannot be null");
+		// Assert.notNull(tenantId, "tenantId cannot be null");
 		Assert.notNull(incidentId, "incidentId cannot be null");
 		logger.info("request to get incident received");
 		return incidentService.getIncident(tenantId, incidentId);
@@ -74,7 +77,7 @@ public class IncidentController {
 	void deleteIncident(@RequestHeader String authenticationToken, @RequestParam("tenantId") String tenantId,
 			@RequestParam("incidentId") String incidentId) {
 		logger.info("request for incident deletion received");
-		Assert.notNull(tenantId, "tenantId cannot be null");
+		// Assert.notNull(tenantId, "tenantId cannot be null");
 		Assert.notNull(incidentId, "incidentId cannot be null");
 		incidentService.deleteIncident(tenantId, incidentId);
 		return;
@@ -101,10 +104,10 @@ public class IncidentController {
 			@ApiResponse(code = 404, message = "not found!!!") })
 	@RequestMapping(value = "/incident/getAllIncident", method = RequestMethod.GET)
 
-	List<Incident> getAllIncident(@RequestHeader String authenticationToken, @RequestParam("tenantId") Integer tenantId,
-			@RequestParam("includeSelfResponse") Boolean includeSelfResponse) {
+	List<Incident> getAllIncident(@RequestHeader String authenticationToken,
+			@RequestParam("tenantId") Integer tenantId) {
 		logger.info("request for get all incident received");
-		Assert.notNull(tenantId, "tenantId cannot be null");
+		// Assert.notNull(tenantId, "tenantId cannot be null");
 		return incidentService.getAllIncident(tenantId);
 	}
 
@@ -113,11 +116,10 @@ public class IncidentController {
 			@ApiResponse(code = 401, message = "not authorized!"), @ApiResponse(code = 403, message = "forbidden!!!"),
 			@ApiResponse(code = 404, message = "not found!!!") })
 	@RequestMapping(value = "/incident/getAllIncidentAssignedToTeam", method = RequestMethod.GET)
-
-	List<Incident> getAllIncidentAssignedToTeam(@RequestHeader String authenticationToken,
+	List<IncidentDetails> getAllIncidentAssignedToTeam(@RequestHeader String authenticationToken,
 			@RequestParam("tenantId") Integer tenantId, @RequestParam("teamId") String teamId) {
 		logger.info("request to get all incidents assigned to a team received");
-		Assert.notNull(tenantId, "incidentId cannot be null");
+		// Assert.notNull(tenantId, "incidentId cannot be null");
 		Assert.notNull(teamId, "incidentId cannot be null");
 		return incidentService.getAllIncidentAssignedToTeam(tenantId, teamId);
 	}
@@ -127,13 +129,12 @@ public class IncidentController {
 			@ApiResponse(code = 401, message = "not authorized!"), @ApiResponse(code = 403, message = "forbidden!!!"),
 			@ApiResponse(code = 404, message = "not found!!!") })
 	@RequestMapping(value = "/incident/getAllResponseTimeForIncident", method = RequestMethod.GET)
-
-	IncidentResponseDetails getAllResponseTimeForIncident(@RequestHeader String authenticationToken,
-			@RequestParam("tenantId") Integer tenantId, @RequestParam("incidentId") String incidentId) {
+	List<IncidentResponseDetails> getAllResponseTimeForIncident(@RequestHeader String authenticationToken,
+			@RequestParam("tenantId") Integer tenantId, @RequestParam("incidentId") List<String> incidentIds) {
 		logger.info("request to fetch all responses for a team received");
-		Assert.notNull(incidentId, "incidentId cannot be null");
-		Assert.notNull(tenantId, "tenantId cannot be null");
-		return incidentResponseService.getAllResponsesForIncidentId(tenantId, incidentId);
+		Assert.notNull(incidentIds, "incidentId cannot be null");
+		// Assert.notNull(tenantId, "tenantId cannot be null");
+		return incidentResponseService.getAllResponsesForIncidentId(tenantId, incidentIds);
 	}
 
 	@ApiOperation(value = "provide response time for an incident", response = Void.class, tags = "provideResponseTimeForIncident")
@@ -141,12 +142,11 @@ public class IncidentController {
 			@ApiResponse(code = 401, message = "not authorized!"), @ApiResponse(code = 403, message = "forbidden!!!"),
 			@ApiResponse(code = 404, message = "not found!!!") })
 	@RequestMapping(value = "/incident/provideResponseTime", method = RequestMethod.PUT)
-
 	public void provideResponseTimeForIncident(@RequestHeader String authenticationToken,
 			@RequestParam("tenantId") Integer tenantId, @RequestParam("incidentId") String incidentId,
 			@RequestBody ResponseDetails responseDetails) {
 		Assert.notNull(incidentId, "incidentId cannot be null");
-		Assert.notNull(tenantId, "tenantId cannot be null");
+		// Assert.notNull(tenantId, "tenantId cannot be null");
 		Assert.notNull(responseDetails.getUserId(), "userId cannot be null");
 		Assert.notNull(responseDetails.getTime(), "time cannot be null");
 		Assert.notNull(responseDetails.getTeamId(), "teamId cannot be null");
@@ -155,4 +155,15 @@ public class IncidentController {
 
 	}
 
+	@ApiOperation(value = "provide all responses time for a list of incidents", response = Map.class, tags = "getAllResponsesForIncidentIdByUserIdTeamId")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Success|OK"),
+			@ApiResponse(code = 401, message = "not authorized!"), @ApiResponse(code = 403, message = "forbidden!!!"),
+			@ApiResponse(code = 404, message = "not found!!!") })
+	@RequestMapping(value = "/incident/getAllResponsesForIncidentIdByUserIdTeamId", method = RequestMethod.GET)
+	public Map<String, Integer> getAllIncidentResponsesByUser(Integer tenantId, String userId, String teamId,
+			List<String> listOfIncidentIds) {
+		return incidentResponseService.getAllResponsesForIncidentIdByUserIdTeamId(tenantId, userId, teamId,
+				listOfIncidentIds);
+
+	}
 }

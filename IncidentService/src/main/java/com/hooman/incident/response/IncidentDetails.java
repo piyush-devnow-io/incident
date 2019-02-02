@@ -67,6 +67,8 @@ public class IncidentDetails {
 		this.responseTimeForUser = responseTimeForUser;
 	}
 
+	
+
 	public String getUserId() {
 		return userId;
 	}

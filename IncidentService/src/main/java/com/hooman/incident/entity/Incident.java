@@ -62,6 +62,7 @@ public class Incident {
 	@Column(name = "criteria10")
 	String criteria10;
 
+	
 	public Incident() {
 		super();
 	}

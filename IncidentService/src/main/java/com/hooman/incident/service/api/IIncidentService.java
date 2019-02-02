@@ -1,8 +1,12 @@
 package com.hooman.incident.service.api;
 
 import java.util.List;
+import java.util.Map;
 
 import com.hooman.incident.entity.Incident;
+import com.hooman.incident.entity.IncidentResponseEntity;
+import com.hooman.incident.response.IncidentDetails;
+import com.hooman.incident.response.IncidentResponseDetails;
 
 public interface IIncidentService {
 	Incident createNewIncident(Integer tenantId, String userId, String subject, String criteria1, String criteria2,
@@ -19,6 +23,6 @@ public interface IIncidentService {
 
 	List<Incident> getAllIncident(Integer tenantId);
 
-	List<Incident> getAllIncidentAssignedToTeam(Integer tenantId, String teamId);
+	List<IncidentDetails> getAllIncidentAssignedToTeam(Integer tenantId, String teamId);
 
 }

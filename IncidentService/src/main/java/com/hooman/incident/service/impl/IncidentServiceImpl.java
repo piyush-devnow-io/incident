@@ -1,5 +1,6 @@
 package com.hooman.incident.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -9,6 +10,9 @@ import org.springframework.stereotype.Service;
 
 import com.hooman.incident.entity.Incident;
 import com.hooman.incident.entity.IncidentAssignedTeamEntity;
+import com.hooman.incident.entity.IncidentResponseEntity;
+import com.hooman.incident.response.IncidentDetails;
+import com.hooman.incident.response.IncidentResponseDetails;
 import com.hooman.incident.service.api.IIncidentService;
 import com.hooman.incident.service.repository.IncidentAssignedTeamRepository;
 import com.hooman.incident.service.repository.IncidentRepository;
@@ -92,12 +96,38 @@ public class IncidentServiceImpl implements IIncidentService {
 	}
 
 	@Override
-	public List<Incident> getAllIncidentAssignedToTeam(Integer tenantId, String teamId) {
+	public List<IncidentDetails> getAllIncidentAssignedToTeam(Integer tenantId, String teamId) {
 		List<String> allIncidentsAssignedToTeam = incidentAssignedTeamRepository.getAllIncidentsAssignedToTeam(tenantId,
 				teamId);
 		List<Incident> findAllById = incidentRepository.findAllById(allIncidentsAssignedToTeam);
-		return findAllById;
+//		List<IncidentResponseDetails> allIncidentResponsesByUser = getAllIncidentResponsesByUser(tenantId,
+//				allIncidentsAssignedToTeam, userId);
+		List<IncidentDetails> incidentDetails = convertListOfIncidentToIncidentDetails(findAllById);
+
+		return incidentDetails;
 	}
+
+	private List<IncidentDetails> convertListOfIncidentToIncidentDetails(List<Incident> findAllById) {
+		List<IncidentDetails> list = new ArrayList<>();
+		for (Incident incident : findAllById) {
+			list.add(new IncidentDetails(incident.getTenantId(), incident.getIncidentId(), incident.getUserId(),
+					incident.getSubject(), incident.getCriteria1(), incident.getCriteria2(), incident.getCriteria3(),
+					incident.getCriteria4(), incident.getCriteria5(), incident.getCriteria6(), incident.getCriteria7(),
+					incident.getCriteria8(), incident.getCriteria9(), incident.getCriteria10(), null));
+		}
+		return list;
+	}
+
+//	@Override
+//	public List<IncidentResponseDetails> getAllIncidentResponsesByUser(Integer tenantId, List<String> listOfIncidentIds,
+//			String userId) {
+//		List<IncidentResponseEntity> findAllById = incidentResponseRepository.findAllById(listOfIncidentIds);
+//		List<IncidentResponseDetails> list = new ArrayList<>();
+//		for (IncidentResponseEntity entity : findAllById) {
+//			list.add(incidentResponseRepository.fi)
+//		}
+//		return null;
+//	}
 
 	private Incident getNewIncident(Integer tenantId, String incidentId, String userId, String subject,
 			String criteria1, String criteria2, String criteria3, String criteria4, String criteria5, String criteria6,
@@ -121,5 +151,7 @@ public class IncidentServiceImpl implements IIncidentService {
 //		assignedTeamEntity2.setIncident(incident);
 		return incident;
 	}
+
+	
 
 }
