@@ -23,7 +23,7 @@ public class IncidentServiceImpl implements IIncidentService {
 
 	@Autowired
 	IncidentResponseRepository incidentResponseRepository;
-	
+
 	@Autowired
 	IncidentAssignedTeamRepository incidentAssignedTeamRepository;
 
@@ -93,7 +93,8 @@ public class IncidentServiceImpl implements IIncidentService {
 
 	@Override
 	public List<Incident> getAllIncidentAssignedToTeam(Integer tenantId, String teamId) {
-		List<String> allIncidentsAssignedToTeam = incidentAssignedTeamRepository.getAllIncidentsAssignedToTeam(tenantId, teamId);
+		List<String> allIncidentsAssignedToTeam = incidentAssignedTeamRepository.getAllIncidentsAssignedToTeam(tenantId,
+				teamId);
 		List<Incident> findAllById = incidentRepository.findAllById(allIncidentsAssignedToTeam);
 		return findAllById;
 	}

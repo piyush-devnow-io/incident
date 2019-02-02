@@ -1,11 +1,11 @@
 package com.hooman.incident.controller;
 
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,6 +45,8 @@ public class IncidentController {
 
 	Incident createNewIncident(@RequestHeader String authenticationToken, @RequestBody IncidentRequest request) {
 		logger.info("request received for incident creation");
+		Assert.notNull(request.getTenantId(), "tenantId cannot be null");
+		Assert.notNull(request.getUserId(), "userId cannot be null");
 		return incidentService.createNewIncident(request.getTenantId(), request.getUserId(), request.getSubject(),
 				request.getCriteria1(), request.getCriteria2(), request.getCriteria3(), request.getCriteria4(),
 				request.getCriteria5(), request.getCriteria6(), request.getCriteria7(), request.getCriteria8(),
@@ -58,7 +60,8 @@ public class IncidentController {
 	@RequestMapping(value = "/incident", method = RequestMethod.GET)
 	Incident getIncident(@RequestHeader String authenticationToken, @RequestParam("tenantId") Integer tenantId,
 			@RequestParam("incidentId") String incidentId) {
-
+		Assert.notNull(tenantId, "tenantId cannot be null");
+		Assert.notNull(incidentId, "incidentId cannot be null");
 		logger.info("request to get incident received");
 		return incidentService.getIncident(tenantId, incidentId);
 	}
@@ -71,6 +74,8 @@ public class IncidentController {
 	void deleteIncident(@RequestHeader String authenticationToken, @RequestParam("tenantId") String tenantId,
 			@RequestParam("incidentId") String incidentId) {
 		logger.info("request for incident deletion received");
+		Assert.notNull(tenantId, "tenantId cannot be null");
+		Assert.notNull(incidentId, "incidentId cannot be null");
 		incidentService.deleteIncident(tenantId, incidentId);
 		return;
 	}
@@ -96,9 +101,10 @@ public class IncidentController {
 			@ApiResponse(code = 404, message = "not found!!!") })
 	@RequestMapping(value = "/incident/getAllIncident", method = RequestMethod.GET)
 
-	List<Incident> getAllIncident(@RequestHeader String authenticationToken,
-			@RequestParam("tenantId") Integer tenantId) {
+	List<Incident> getAllIncident(@RequestHeader String authenticationToken, @RequestParam("tenantId") Integer tenantId,
+			@RequestParam("includeSelfResponse") Boolean includeSelfResponse) {
 		logger.info("request for get all incident received");
+		Assert.notNull(tenantId, "tenantId cannot be null");
 		return incidentService.getAllIncident(tenantId);
 	}
 
@@ -111,6 +117,8 @@ public class IncidentController {
 	List<Incident> getAllIncidentAssignedToTeam(@RequestHeader String authenticationToken,
 			@RequestParam("tenantId") Integer tenantId, @RequestParam("teamId") String teamId) {
 		logger.info("request to get all incidents assigned to a team received");
+		Assert.notNull(tenantId, "incidentId cannot be null");
+		Assert.notNull(teamId, "incidentId cannot be null");
 		return incidentService.getAllIncidentAssignedToTeam(tenantId, teamId);
 	}
 
@@ -123,6 +131,8 @@ public class IncidentController {
 	IncidentResponseDetails getAllResponseTimeForIncident(@RequestHeader String authenticationToken,
 			@RequestParam("tenantId") Integer tenantId, @RequestParam("incidentId") String incidentId) {
 		logger.info("request to fetch all responses for a team received");
+		Assert.notNull(incidentId, "incidentId cannot be null");
+		Assert.notNull(tenantId, "tenantId cannot be null");
 		return incidentResponseService.getAllResponsesForIncidentId(tenantId, incidentId);
 	}
 
@@ -135,6 +145,11 @@ public class IncidentController {
 	public void provideResponseTimeForIncident(@RequestHeader String authenticationToken,
 			@RequestParam("tenantId") Integer tenantId, @RequestParam("incidentId") String incidentId,
 			@RequestBody ResponseDetails responseDetails) {
+		Assert.notNull(incidentId, "incidentId cannot be null");
+		Assert.notNull(tenantId, "tenantId cannot be null");
+		Assert.notNull(responseDetails.getUserId(), "userId cannot be null");
+		Assert.notNull(responseDetails.getTime(), "time cannot be null");
+		Assert.notNull(responseDetails.getTeamId(), "teamId cannot be null");
 		logger.info("request to provide response for incident received");
 		incidentResponseService.provideResponseForIncident(tenantId, incidentId, responseDetails);
 
