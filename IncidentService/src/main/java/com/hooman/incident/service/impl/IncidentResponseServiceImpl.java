@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hooman.incident.entity.IncidentResponseEntity;
 import com.hooman.incident.request.ResponseDetails;
+import com.hooman.incident.response.IncidentResponseDetails;
 import com.hooman.incident.service.api.IIncidentResponseService;
 import com.hooman.incident.service.repository.IncidentResponseRepository;
 
@@ -27,21 +28,22 @@ public class IncidentResponseServiceImpl implements IIncidentResponseService {
 		String userId = responseDetails.getUserId();
 		String teamId = responseDetails.getTeamId();
 		Integer time = responseDetails.getTime();
-		Map<String, Map<String, Long>> teamIdVSUserIdVsResponseTime = null;
+		Map<String, Map<String, Integer>> teamIdVSUserIdVsResponseTime = null;
 		if (!existingResponse.isPresent()) {
-			teamIdVSUserIdVsResponseTime = new HashMap<String, Map<String, Long>>();
-			Map<String, Long> map = new HashMap<String, Long>();
+			teamIdVSUserIdVsResponseTime = new HashMap<String, Map<String, Integer>>();
+			Map<String, Integer> map = new HashMap<String, Integer>();
+			map.put(userId, time);
 			teamIdVSUserIdVsResponseTime.put(teamId, map);
 			entity = new IncidentResponseEntity();
 		} else {
 			String data = existingResponse.get().getTeamIdVsUserIdVsResponseTime();
 			teamIdVSUserIdVsResponseTime = convertStringToMap(data);
-			Map<String, Long> map = teamIdVSUserIdVsResponseTime.get(teamId);
+			Map<String, Integer> map = teamIdVSUserIdVsResponseTime.get(teamId);
 			if (map == null) {
-				map = new HashMap<String, Long>();
+				map = new HashMap<String, Integer>();
 			}
-			map.put(userId, Long.parseLong(String.valueOf(time)));
-			entity.setId(existingResponse.get().getId());
+			map.put(userId, time);
+//			entity.setId(existingResponse.get().getId());
 		}
 		String convertMapIntoString = convertMapIntoString(teamIdVSUserIdVsResponseTime);
 		entity.setIncidentId(incidentId);
@@ -51,16 +53,20 @@ public class IncidentResponseServiceImpl implements IIncidentResponseService {
 	}
 
 	@Override
-	public Map<String, Map<String, Long>> getAllResponsesForIncidentId(Integer tenantId, String incidentId) {
+	public IncidentResponseDetails getAllResponsesForIncidentId(Integer tenantId, String incidentId) {
 		Optional<IncidentResponseEntity> incidentResponseEntity = incidentResponseRepository.findById(incidentId);
 		if (incidentResponseEntity.isPresent()) {
+			IncidentResponseDetails response = new IncidentResponseDetails();
+			response.setTenantId(tenantId);
+			response.setIncidentId(incidentId);
 			String teamIdVsUserIdVsResponseTime = incidentResponseEntity.get().getTeamIdVsUserIdVsResponseTime();
-			return convertStringToMap(teamIdVsUserIdVsResponseTime);
+			response.setResponse(convertStringToMap(teamIdVsUserIdVsResponseTime));
+			return response;
 		}
 		return null;
 	}
 
-	private String convertMapIntoString(Map<String, Map<String, Long>> map) {
+	private String convertMapIntoString(Map<String, Map<String, Integer>> map) {
 		ObjectMapper mapperObj = new ObjectMapper();
 		try {
 			String jsonResp = mapperObj.writeValueAsString(map);
@@ -71,9 +77,9 @@ public class IncidentResponseServiceImpl implements IIncidentResponseService {
 		return null;
 	}
 
-	private Map<String, Map<String, Long>> convertStringToMap(String details) {
+	private Map<String, Map<String, Integer>> convertStringToMap(String details) {
 		try {
-			Map<String, Map<String, Long>> response = new ObjectMapper().readValue(details, HashMap.class);
+			Map<String, Map<String, Integer>> response = new ObjectMapper().readValue(details, HashMap.class);
 			return response;
 		} catch (IOException e) {
 			e.printStackTrace();

@@ -11,14 +11,10 @@ import javax.persistence.Table;
 @Table(name = "incident_response_details")
 public class IncidentResponseEntity {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
-	@Column(name = "id")
-	String id;
-
 	@Column(name = "tenant_id")
 	Integer tenantId;
 
+	@Id
 	@Column(name = "incident_id")
 	String incidentId;
 
@@ -29,9 +25,8 @@ public class IncidentResponseEntity {
 		super();
 	}
 
-	public IncidentResponseEntity(String id, Integer tenantId, String incidentId, String teamIdVsUserIdVsResponseTime) {
+	public IncidentResponseEntity(Integer tenantId, String incidentId, String teamIdVsUserIdVsResponseTime) {
 		super();
-		this.id = id;
 		this.tenantId = tenantId;
 		this.incidentId = incidentId;
 		this.teamIdVsUserIdVsResponseTime = teamIdVsUserIdVsResponseTime;
@@ -43,14 +38,6 @@ public class IncidentResponseEntity {
 
 	public void setTeamIdVsUserIdVsResponseTime(String teamIdVsUserIdVsResponseTime) {
 		this.teamIdVsUserIdVsResponseTime = teamIdVsUserIdVsResponseTime;
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
 	}
 
 	public Integer getTenantId() {
