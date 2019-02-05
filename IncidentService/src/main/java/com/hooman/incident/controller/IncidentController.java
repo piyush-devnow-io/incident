@@ -1,12 +1,13 @@
 package com.hooman.incident.controller;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -40,6 +41,7 @@ public class IncidentController {
 	@Autowired
 	IIncidentResponseService incidentResponseService;
 
+//	@PreAuthorize("#oauth2.hasScope('bar') and #oauth2.hasScope('read')")
 	@ApiOperation(value = "Create new incident", response = Incident.class, tags = "createNewIncident")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Success|OK"),
 			@ApiResponse(code = 401, message = "not authorized!"), @ApiResponse(code = 403, message = "forbidden!!!"),
@@ -47,6 +49,8 @@ public class IncidentController {
 	@RequestMapping(value = "/incident/create", method = RequestMethod.POST)
 
 	Incident createNewIncident(@RequestHeader String authenticationToken, @RequestBody IncidentRequest request) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
 		logger.info("request received for incident creation");
 		Assert.notNull(request.getTenantId(), "tenantId cannot be null");
 		Assert.notNull(request.getUserId(), "userId cannot be null");
