@@ -45,6 +45,8 @@ public class IncidentResponseServiceImpl implements IIncidentResponseService {
 				map = new HashMap<String, Integer>();
 			}
 			map.put(userId, time);
+			teamIdVSUserIdVsResponseTime.put(teamId, map);
+			entity = existingResponse.get();
 //			entity.setId(existingResponse.get().getId());
 		}
 		String convertMapIntoString = convertMapIntoString(teamIdVSUserIdVsResponseTime);
