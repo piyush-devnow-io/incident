@@ -21,7 +21,7 @@ public class OAuth2ResourceServerConfigJwt extends ResourceServerConfigurerAdapt
 	public void configure(final HttpSecurity http) throws Exception {
 		// @formatter:off
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED).and().authorizeRequests()
-				.anyRequest().access("#oauth2.hasScope('read')");
+				.antMatchers("/incident").access("#oauth2.hasScope('incident')");
 		// @formatter:on
 	}
 
