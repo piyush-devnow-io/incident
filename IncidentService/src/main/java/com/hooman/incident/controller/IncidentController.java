@@ -48,7 +48,8 @@ public class IncidentController {
 			@ApiResponse(code = 404, message = "not found!!!") })
 	@RequestMapping(value = "/incident/create", method = RequestMethod.POST)
 
-	Incident createNewIncident(@RequestHeader String authenticationToken, @RequestBody IncidentRequest request) {
+	Incident createNewIncident(@RequestHeader(name = "Authorization") String authenticationToken,
+			@RequestBody IncidentRequest request) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
 		logger.info("request received for incident creation");
@@ -65,8 +66,8 @@ public class IncidentController {
 			@ApiResponse(code = 401, message = "not authorized!"), @ApiResponse(code = 403, message = "forbidden!!!"),
 			@ApiResponse(code = 404, message = "not found!!!") })
 	@RequestMapping(value = "/incident", method = RequestMethod.GET)
-	Incident getIncident(@RequestHeader String authenticationToken, @RequestParam("tenantId") Integer tenantId,
-			@RequestParam("incidentId") String incidentId) {
+	Incident getIncident(@RequestHeader(name = "Authorization") String authenticationToken,
+			@RequestParam("tenantId") Integer tenantId, @RequestParam("incidentId") String incidentId) {
 		// Assert.notNull(tenantId, "tenantId cannot be null");
 		Assert.notNull(incidentId, "incidentId cannot be null");
 		logger.info("request to get incident received");
@@ -78,8 +79,8 @@ public class IncidentController {
 			@ApiResponse(code = 401, message = "not authorized!"), @ApiResponse(code = 403, message = "forbidden!!!"),
 			@ApiResponse(code = 404, message = "not found!!!") })
 	@RequestMapping(value = "/incident/delete", method = RequestMethod.DELETE)
-	void deleteIncident(@RequestHeader String authenticationToken, @RequestParam("tenantId") String tenantId,
-			@RequestParam("incidentId") String incidentId) {
+	void deleteIncident(@RequestHeader(name = "Authorization") String authenticationToken,
+			@RequestParam("tenantId") String tenantId, @RequestParam("incidentId") String incidentId) {
 		logger.info("request for incident deletion received");
 		// Assert.notNull(tenantId, "tenantId cannot be null");
 		Assert.notNull(incidentId, "incidentId cannot be null");
@@ -93,8 +94,8 @@ public class IncidentController {
 			@ApiResponse(code = 404, message = "not found!!!") })
 	@RequestMapping(value = "/incident/update", method = RequestMethod.POST)
 
-	Incident updateIncident(@RequestHeader String authenticationToken, @RequestParam("incidentId") String incidentId,
-			@RequestParam("request") IncidentRequest request) {
+	Incident updateIncident(@RequestHeader(name = "Authorization") String authenticationToken,
+			@RequestParam("incidentId") String incidentId, @RequestParam("request") IncidentRequest request) {
 		logger.info("request for incident updation received");
 		return incidentService.updateIncident(incidentId, request.getTenantId(), request.getUserId(),
 				request.getSubject(), request.getCriteria1(), request.getCriteria2(), request.getCriteria3(),
@@ -108,7 +109,7 @@ public class IncidentController {
 			@ApiResponse(code = 404, message = "not found!!!") })
 	@RequestMapping(value = "/incident/getAllIncident", method = RequestMethod.GET)
 
-	List<Incident> getAllIncident(@RequestHeader String authenticationToken,
+	List<Incident> getAllIncident(@RequestHeader(name = "Authorization") String authenticationToken,
 			@RequestParam("tenantId") Integer tenantId) {
 		logger.info("request for get all incident received");
 		// Assert.notNull(tenantId, "tenantId cannot be null");
@@ -120,7 +121,8 @@ public class IncidentController {
 			@ApiResponse(code = 401, message = "not authorized!"), @ApiResponse(code = 403, message = "forbidden!!!"),
 			@ApiResponse(code = 404, message = "not found!!!") })
 	@RequestMapping(value = "/incident/getAllIncidentAssignedToTeam", method = RequestMethod.GET)
-	List<IncidentDetails> getAllIncidentAssignedToTeam(@RequestHeader String authenticationToken,
+	List<IncidentDetails> getAllIncidentAssignedToTeam(
+			@RequestHeader(name = "Authorization") String authenticationToken,
 			@RequestParam("tenantId") Integer tenantId, @RequestParam("teamId") String teamId) {
 		logger.info("request to get all incidents assigned to a team received");
 		// Assert.notNull(tenantId, "incidentId cannot be null");
@@ -133,7 +135,8 @@ public class IncidentController {
 			@ApiResponse(code = 401, message = "not authorized!"), @ApiResponse(code = 403, message = "forbidden!!!"),
 			@ApiResponse(code = 404, message = "not found!!!") })
 	@RequestMapping(value = "/incident/getAllResponseTimeForIncident", method = RequestMethod.GET)
-	List<IncidentResponseDetails> getAllResponseTimeForIncident(@RequestHeader String authenticationToken,
+	List<IncidentResponseDetails> getAllResponseTimeForIncident(
+			@RequestHeader(name = "Authorization") String authenticationToken,
 			@RequestParam("tenantId") Integer tenantId, @RequestParam("incidentId") List<String> incidentIds) {
 		logger.info("request to fetch all responses for a team received");
 		Assert.notNull(incidentIds, "incidentId cannot be null");
@@ -146,7 +149,7 @@ public class IncidentController {
 			@ApiResponse(code = 401, message = "not authorized!"), @ApiResponse(code = 403, message = "forbidden!!!"),
 			@ApiResponse(code = 404, message = "not found!!!") })
 	@RequestMapping(value = "/incident/provideResponseTime", method = RequestMethod.PUT)
-	public void provideResponseTimeForIncident(@RequestHeader String authenticationToken,
+	public void provideResponseTimeForIncident(@RequestHeader(name = "Authorization") String authenticationToken,
 			@RequestParam("tenantId") Integer tenantId, @RequestParam("incidentId") String incidentId,
 			@RequestBody ResponseDetails responseDetails) {
 		Assert.notNull(incidentId, "incidentId cannot be null");
