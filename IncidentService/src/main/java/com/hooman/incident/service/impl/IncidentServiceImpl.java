@@ -1,8 +1,10 @@
 package com.hooman.incident.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.hooman.incident.entity.Incident;
 import com.hooman.incident.entity.IncidentAssignedTeamEntity;
-import com.hooman.incident.entity.IncidentResponseEntity;
 import com.hooman.incident.response.IncidentDetails;
-import com.hooman.incident.response.IncidentResponseDetails;
 import com.hooman.incident.service.api.IIncidentService;
 import com.hooman.incident.service.repository.IncidentAssignedTeamRepository;
 import com.hooman.incident.service.repository.IncidentRepository;
@@ -152,6 +152,21 @@ public class IncidentServiceImpl implements IIncidentService {
 		return incident;
 	}
 
-	
+	@Override
+	public Map<String, List<String>> getIncidentIdVsAssignedTeamIdList() {
+		Map<String, List<String>> map = new HashMap<>();
+		List<IncidentAssignedTeamEntity> findAll = incidentAssignedTeamRepository.findAll();
+		for (IncidentAssignedTeamEntity entity : findAll) {
+			String incidentId = entity.getIncidentId();
+			String teamId = entity.getTeamId();
+			List<String> list = map.get(incidentId);
+			if (list == null) {
+				list = new ArrayList<>();
+			}
+			list.add(teamId);
+			map.put(incidentId, list);
+		}
+		return map;
+	}
 
 }

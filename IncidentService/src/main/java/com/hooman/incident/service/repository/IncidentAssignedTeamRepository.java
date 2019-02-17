@@ -12,4 +12,5 @@ import com.hooman.incident.entity.IncidentAssignedTeamEntity;
 public interface IncidentAssignedTeamRepository extends JpaRepository<IncidentAssignedTeamEntity, String> {
 	@Query("SELECT incidentId FROM IncidentAssignedTeamEntity p WHERE p.tenantId = :tenantId and p.teamId = :teamId")
 	List<String> getAllIncidentsAssignedToTeam(@Param("tenantId") Integer tenantId, @Param("teamId") String teamId);
+	
 }
