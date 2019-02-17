@@ -1,18 +1,23 @@
 package com.hooman.incident.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import com.hooman.incident.entity.Incident;
 import com.hooman.incident.entity.IncidentAssignedTeamEntity;
-import com.hooman.incident.entity.IncidentResponseEntity;
+import com.hooman.incident.push.notification.HeaderRequestInterceptor;
+import com.hooman.incident.push.notification.NotificationSender;
 import com.hooman.incident.response.IncidentDetails;
-import com.hooman.incident.response.IncidentResponseDetails;
 import com.hooman.incident.service.api.IIncidentService;
 import com.hooman.incident.service.repository.IncidentAssignedTeamRepository;
 import com.hooman.incident.service.repository.IncidentRepository;
@@ -24,6 +29,9 @@ public class IncidentServiceImpl implements IIncidentService {
 
 	@Autowired
 	IncidentRepository incidentRepository;
+
+	@Autowired
+	NotificationSender notificationSender;
 
 	@Autowired
 	IncidentResponseRepository incidentResponseRepository;
@@ -46,6 +54,12 @@ public class IncidentServiceImpl implements IIncidentService {
 			entity.setTenantId(tenantId);
 			entity.setTeamId(teamId);
 			incidentAssignedTeamRepository.save(entity);
+		}
+		try {
+			sendAssignmentNotification(incidentId, userId, tenantId);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return savedIncident;
 	}
@@ -152,6 +166,31 @@ public class IncidentServiceImpl implements IIncidentService {
 		return incident;
 	}
 
-	
+	private void sendAssignmentNotification(String incidentId, String userId, Integer tenantId) throws Exception {
+		List tokens = getAppTokens(userId, tenantId);
+		for (Object token : tokens)
+			notificationSender.send("IncidentAssigned", incidentId, new HashMap<String, String>(), (String) token);
+	}
+
+	/**
+	 * @param userId
+	 * @return
+	 */
+	private List getAppTokens(String userId, Integer tenantId) {
+		RestTemplate restTemplate = new RestTemplate();
+
+		ArrayList<ClientHttpRequestInterceptor> interceptors = new ArrayList<>();
+		interceptors.add(new HeaderRequestInterceptor("Authorization",
+				"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NTAzOTg1ODUsInVzZXJfbmFtZSI6InNodWJoYW1AZGV2bm93LmlvIiwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiJdLCJqdGkiOiIwZDI3YzBiOC01ZWYyLTQ1NjAtOTRiMS1hZWEyYjU5NzQ4MGEiLCJjbGllbnRfaWQiOiJ3ZWJDbGllbnRJZFBhc3N3b3JkIiwic2NvcGUiOlsiaW5jaWRlbnQiLCJyZWFkIiwidGVhbSIsInVzZXIiLCJ3cml0ZSJdfQ.7h5yWpUKpjUGmBc2nwbP58brGNIbt3QDgRPpi5QtX5o"));
+		interceptors.add(new HeaderRequestInterceptor("Content-Type", "application/json"));
+		interceptors.add(new HeaderRequestInterceptor("Tenant-Id", tenantId + ""));
+		restTemplate.setInterceptors(interceptors);
+
+		Map<String, Object> params = new HashMap<>();
+		params.put("username", userId);
+		ResponseEntity<List> userTokens = restTemplate
+				.getForEntity("http://localhost:8081/UserManagement/user/{username}/getAppTokens", List.class, params);
+		return userTokens.getBody();
+	}
 
 }

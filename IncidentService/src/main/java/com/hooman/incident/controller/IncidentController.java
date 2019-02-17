@@ -51,11 +51,9 @@ public class IncidentController {
 	Incident createNewIncident(@RequestHeader(name = "Authorization") String authenticationToken,
 			@RequestBody IncidentRequest request) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
 		logger.info("request received for incident creation");
 		Assert.notNull(request.getTenantId(), "tenantId cannot be null");
-		Assert.notNull(request.getUserId(), "userId cannot be null");
-		return incidentService.createNewIncident(request.getTenantId(), request.getUserId(), request.getSubject(),
+		return incidentService.createNewIncident(request.getTenantId(), authentication.getName(), request.getSubject(),
 				request.getCriteria1(), request.getCriteria2(), request.getCriteria3(), request.getCriteria4(),
 				request.getCriteria5(), request.getCriteria6(), request.getCriteria7(), request.getCriteria8(),
 				request.getCriteria9(), request.getCriteria10(), request.getAssignedTeamIds());
