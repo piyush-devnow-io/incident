@@ -1,5 +1,6 @@
 package com.hooman.incident.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +21,7 @@ import com.hooman.incident.entity.Incident;
 import com.hooman.incident.request.IncidentRequest;
 import com.hooman.incident.request.ResponseDetails;
 import com.hooman.incident.response.IncidentDetails;
+import com.hooman.incident.response.IncidentResponseData;
 import com.hooman.incident.response.IncidentResponseDetails;
 import com.hooman.incident.service.api.IIncidentResponseService;
 import com.hooman.incident.service.api.IIncidentService;
@@ -107,11 +109,30 @@ public class IncidentController {
 			@ApiResponse(code = 404, message = "not found!!!") })
 	@RequestMapping(value = "/incident/getAllIncident", method = RequestMethod.GET)
 
-	List<Incident> getAllIncident(@RequestHeader(name = "Authorization") String authenticationToken,
+	List<IncidentDetails> getAllIncident(@RequestHeader String authenticationToken,
 			@RequestParam("tenantId") Integer tenantId) {
 		logger.info("request for get all incident received");
 		// Assert.notNull(tenantId, "tenantId cannot be null");
-		return incidentService.getAllIncident(tenantId);
+		List<Incident> allIncident = incidentService.getAllIncident(tenantId);
+		List<IncidentDetails> allResponse = new ArrayList<>();
+		Map<String, List<String>> incidentIdVsAssignedTeamIdList = incidentService.getIncidentIdVsAssignedTeamIdList();
+		for (Incident in : allIncident) {
+			IncidentDetails detail = convertIncidentToIncidentDetail(in);
+			List<String> list = incidentIdVsAssignedTeamIdList.get(detail.getIncidentId());
+			if (list != null) {
+				detail.setAssignedTeamId(list.get(0));
+			}
+			allResponse.add(detail);
+		}
+		return allResponse;
+	}
+
+	private IncidentDetails convertIncidentToIncidentDetail(Incident in) {
+		IncidentDetails inc = new IncidentDetails(in.getTenantId(), in.getIncidentId(), in.getUserId(), in.getSubject(),
+				in.getCriteria1(), in.getCriteria2(), in.getCriteria3(), in.getCriteria4(), in.getCriteria5(),
+				in.getCriteria6(), in.getCriteria7(), in.getCriteria8(), in.getCriteria9(), in.getCriteria10(), null);
+		// TODO Auto-generated method stub
+		return inc;
 	}
 
 	@ApiOperation(value = "Get list of incident assigned to a team ", response = Iterable.class, tags = "getAllIncidentAssignedToTeam")
@@ -128,18 +149,42 @@ public class IncidentController {
 		return incidentService.getAllIncidentAssignedToTeam(tenantId, teamId);
 	}
 
-	@ApiOperation(value = "get all response time for an incident", response = IncidentResponseDetails.class, tags = "getAllResponseTimeForIncident")
+	@ApiOperation(value = "get all response time for an incident", response = IncidentResponseData.class, tags = "getAllResponseTimeForIncident")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Success|OK"),
 			@ApiResponse(code = 401, message = "not authorized!"), @ApiResponse(code = 403, message = "forbidden!!!"),
 			@ApiResponse(code = 404, message = "not found!!!") })
 	@RequestMapping(value = "/incident/getAllResponseTimeForIncident", method = RequestMethod.GET)
-	List<IncidentResponseDetails> getAllResponseTimeForIncident(
-			@RequestHeader(name = "Authorization") String authenticationToken,
+	List<IncidentResponseData> getAllResponseTimeForIncident(@RequestHeader String authenticationToken,
 			@RequestParam("tenantId") Integer tenantId, @RequestParam("incidentId") List<String> incidentIds) {
 		logger.info("request to fetch all responses for a team received");
 		Assert.notNull(incidentIds, "incidentId cannot be null");
 		// Assert.notNull(tenantId, "tenantId cannot be null");
-		return incidentResponseService.getAllResponsesForIncidentId(tenantId, incidentIds);
+		List<IncidentResponseDetails> allResponsesForIncidentId = incidentResponseService
+				.getAllResponsesForIncidentId(tenantId, incidentIds);
+		/**
+		 * this logic is not good, just for the jugaad of teammates
+		 */
+		List<IncidentResponseData> data = new ArrayList<>();
+		for (IncidentResponseDetails response : allResponsesForIncidentId) {
+			IncidentResponseData bean = new IncidentResponseData();
+			bean.setIncidentId(response.getIncidentId());
+			bean.setTenantId(response.getTenantId());
+			Map<String, Map<String, Integer>> responseDetail = response.getResponse();
+			if (responseDetail != null) {
+				for (Map.Entry<String, Map<String, Integer>> entrySet : responseDetail.entrySet()) {
+					String teamId = entrySet.getKey();
+					Map<String, Integer> userIdVSResponseTime = entrySet.getValue();
+					for (Map.Entry<String, Integer> entry : userIdVSResponseTime.entrySet()) {
+						String userId = entry.getKey();
+						Integer responseTime = entry.getValue();
+						bean.setUserId(userId);
+						bean.setResponseTime(responseTime);
+					}
+				}
+			}
+			data.add(bean);
+		}
+		return data;
 	}
 
 	@ApiOperation(value = "provide response time for an incident", response = Void.class, tags = "provideResponseTimeForIncident")

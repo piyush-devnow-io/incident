@@ -15,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.hooman.incident.entity.Incident;
 import com.hooman.incident.entity.IncidentAssignedTeamEntity;
+
 import com.hooman.incident.push.notification.HeaderRequestInterceptor;
 import com.hooman.incident.push.notification.NotificationSender;
 import com.hooman.incident.response.IncidentDetails;
@@ -166,6 +167,22 @@ public class IncidentServiceImpl implements IIncidentService {
 		return incident;
 	}
 
+	@Override
+	public Map<String, List<String>> getIncidentIdVsAssignedTeamIdList() {
+		Map<String, List<String>> map = new HashMap<>();
+		List<IncidentAssignedTeamEntity> findAll = incidentAssignedTeamRepository.findAll();
+		for (IncidentAssignedTeamEntity entity : findAll) {
+			String incidentId = entity.getIncidentId();
+			String teamId = entity.getTeamId();
+			List<String> list = map.get(incidentId);
+			if (list == null) {
+				list = new ArrayList<>();
+			}
+			list.add(teamId);
+			map.put(incidentId, list);
+		}
+		return map;
+	}
 	private void sendAssignmentNotification(String incidentId, String userId, Integer tenantId) throws Exception {
 		List tokens = getAppTokens(userId, tenantId);
 		Map<String, String> map = new HashMap<String, String>();

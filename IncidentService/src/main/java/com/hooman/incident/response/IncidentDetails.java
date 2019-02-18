@@ -1,14 +1,6 @@
 package com.hooman.incident.response;
 
-import java.io.Serializable;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-
-import io.swagger.annotations.ApiModelProperty;
+import java.util.List;
 
 public class IncidentDetails {
 
@@ -40,7 +32,7 @@ public class IncidentDetails {
 
 	String criteria10;
 
-	Integer responseTimeForUser;
+	String assignedTeamId;
 
 	public IncidentDetails() {
 		super();
@@ -48,7 +40,7 @@ public class IncidentDetails {
 
 	public IncidentDetails(Integer tenantId, String incidentId, String userId, String subject, String criteria1,
 			String criteria2, String criteria3, String criteria4, String criteria5, String criteria6, String criteria7,
-			String criteria8, String criteria9, String criteria10, Integer responseTimeForUser) {
+			String criteria8, String criteria9, String criteria10, String assignedTeamId) {
 		super();
 		this.tenantId = tenantId;
 		this.incidentId = incidentId;
@@ -64,10 +56,8 @@ public class IncidentDetails {
 		this.criteria8 = criteria8;
 		this.criteria9 = criteria9;
 		this.criteria10 = criteria10;
-		this.responseTimeForUser = responseTimeForUser;
+		this.assignedTeamId = assignedTeamId;
 	}
-
-	
 
 	public String getUserId() {
 		return userId;
@@ -181,12 +171,12 @@ public class IncidentDetails {
 		this.tenantId = tenantId;
 	}
 
-	public Integer getResponseTimeForUser() {
-		return responseTimeForUser;
+	public String getAssignedTeamId() {
+		return assignedTeamId;
 	}
 
-	public void setResponseTimeForUser(Integer responseTimeForUser) {
-		this.responseTimeForUser = responseTimeForUser;
+	public void setAssignedTeamId(String assignedTeamId) {
+		this.assignedTeamId = assignedTeamId;
 	}
 
 }

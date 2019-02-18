@@ -25,4 +25,6 @@ public interface IIncidentService {
 
 	List<IncidentDetails> getAllIncidentAssignedToTeam(Integer tenantId, String teamId);
 
+	Map<String, List<String>> getIncidentIdVsAssignedTeamIdList();
+
 }
