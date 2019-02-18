@@ -168,8 +168,10 @@ public class IncidentServiceImpl implements IIncidentService {
 
 	private void sendAssignmentNotification(String incidentId, String userId, Integer tenantId) throws Exception {
 		List tokens = getAppTokens(userId, tenantId);
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("incidentId", incidentId);
 		for (Object token : tokens)
-			notificationSender.send("IncidentAssigned", incidentId, new HashMap<String, String>(), (String) token);
+			notificationSender.send("IncidentAssigned", incidentId, map, (String) token);
 	}
 
 	/**
