@@ -15,7 +15,6 @@ import org.springframework.web.client.RestTemplate;
 
 import com.hooman.incident.entity.Incident;
 import com.hooman.incident.entity.IncidentAssignedTeamEntity;
-
 import com.hooman.incident.push.notification.HeaderRequestInterceptor;
 import com.hooman.incident.push.notification.NotificationSender;
 import com.hooman.incident.response.IncidentDetails;
@@ -55,13 +54,13 @@ public class IncidentServiceImpl implements IIncidentService {
 			entity.setTenantId(tenantId);
 			entity.setTeamId(teamId);
 			incidentAssignedTeamRepository.save(entity);
+			try {
+				sendAssignmentNotification(incidentId, tenantId, teamId);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
-		try {
-			sendAssignmentNotification(incidentId, userId, tenantId);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
 		return savedIncident;
 	}
 
@@ -183,12 +182,17 @@ public class IncidentServiceImpl implements IIncidentService {
 		}
 		return map;
 	}
-	private void sendAssignmentNotification(String incidentId, String userId, Integer tenantId) throws Exception {
-		List tokens = getAppTokens(userId, tenantId);
+
+	private void sendAssignmentNotification(String incidentId, Integer tenantId, String teamId) throws Exception {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("incidentId", incidentId);
-		for (Object token : tokens)
-			notificationSender.send("IncidentAssigned", incidentId, map, (String) token);
+		map.put("teamId", teamId);
+		List users = getAllUsersOfTeam(teamId, tenantId);
+		for (Object user : users) {
+			List tokens = getAppTokens((String) user, tenantId);
+			for (Object token : tokens)
+				notificationSender.send("IncidentAssigned", incidentId, map, (String) token);
+		}
 	}
 
 	/**
@@ -210,6 +214,23 @@ public class IncidentServiceImpl implements IIncidentService {
 		ResponseEntity<List> userTokens = restTemplate
 				.getForEntity("http://localhost:8081/UserManagement/user/{username}/getAppTokens", List.class, params);
 		return userTokens.getBody();
+	}
+
+	private List getAllUsersOfTeam(String teamId, Integer tenantId) {
+		RestTemplate restTemplate = new RestTemplate();
+
+		ArrayList<ClientHttpRequestInterceptor> interceptors = new ArrayList<>();
+		interceptors.add(new HeaderRequestInterceptor("Authorization",
+				"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NTAzOTg1ODUsInVzZXJfbmFtZSI6InNodWJoYW1AZGV2bm93LmlvIiwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiJdLCJqdGkiOiIwZDI3YzBiOC01ZWYyLTQ1NjAtOTRiMS1hZWEyYjU5NzQ4MGEiLCJjbGllbnRfaWQiOiJ3ZWJDbGllbnRJZFBhc3N3b3JkIiwic2NvcGUiOlsiaW5jaWRlbnQiLCJyZWFkIiwidGVhbSIsInVzZXIiLCJ3cml0ZSJdfQ.7h5yWpUKpjUGmBc2nwbP58brGNIbt3QDgRPpi5QtX5o"));
+		interceptors.add(new HeaderRequestInterceptor("Content-Type", "application/json"));
+		interceptors.add(new HeaderRequestInterceptor("Tenant-Id", tenantId + ""));
+		restTemplate.setInterceptors(interceptors);
+
+		Map<String, Object> params = new HashMap<>();
+		params.put("id", teamId);
+		ResponseEntity<List> usernames = restTemplate
+				.getForEntity("http://localhost:8081/UserManagement/team/{id}/getAllUsernames", List.class, params);
+		return usernames.getBody();
 	}
 
 }
