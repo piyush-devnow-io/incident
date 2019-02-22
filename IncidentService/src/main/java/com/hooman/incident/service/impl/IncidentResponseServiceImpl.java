@@ -25,6 +25,7 @@ public class IncidentResponseServiceImpl implements IIncidentResponseService {
 
 	@Override
 	public void provideResponseForIncident(Integer tenantId, String incidentId, ResponseDetails responseDetails) {
+		incidentResponseRepository.deleteById(incidentId);
 		Optional<IncidentResponseEntity> existingResponse = incidentResponseRepository.findById(incidentId);
 		IncidentResponseEntity entity = null;
 		String userId = responseDetails.getUserId();
