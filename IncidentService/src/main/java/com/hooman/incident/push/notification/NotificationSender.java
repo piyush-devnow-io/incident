@@ -45,7 +45,7 @@ public class NotificationSender {
 
 		JSONObject body = new JSONObject();
 		body.put("to", token);
-
+		System.out.println("token is " + token);
 		JSONObject notification = new JSONObject();
 		notification.put(TITLE, title);
 		notification.put(BODY, titleBody);
@@ -58,11 +58,18 @@ public class NotificationSender {
 		body.put(NOTIFICATION, notification);
 		body.put(DATA, data);
 
-		HttpEntity<String> request = new HttpEntity<>(body.toString());
+		/// by piyush joshi -- fuck you shubham agarwal-- i dont know why!!!!!!
+		JSONObject message = new JSONObject();
+		message.put("to", token);
+		message.put("data", data);
+		///
+
+		HttpEntity<String> request = new HttpEntity<>(message.toString());
 
 		CompletableFuture<String> pushNotification = send(request);
 		try {
-			pushNotification.get();
+			String string = pushNotification.get();
+			System.out.println("success hai " + string);
 		} catch (InterruptedException | ExecutionException e) {
 			throw new Exception("Failed to send notification");
 		}
