@@ -58,7 +58,7 @@ public class NotificationSender {
 		body.put(NOTIFICATION, notification);
 		body.put(DATA, data);
 
-		/// by piyush joshi -- fuck you shubham agarwal-- i dont know why!!!!!!
+		/// by piyush joshi !!
 		JSONObject message = new JSONObject();
 		message.put("to", token);
 		message.put("data", data);
