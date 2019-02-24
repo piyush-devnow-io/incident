@@ -25,7 +25,6 @@ public class IncidentResponseServiceImpl implements IIncidentResponseService {
 
 	@Override
 	public void provideResponseForIncident(Integer tenantId, String incidentId, ResponseDetails responseDetails) {
-		incidentResponseRepository.deleteById(incidentId);
 		Optional<IncidentResponseEntity> existingResponse = incidentResponseRepository.findById(incidentId);
 		IncidentResponseEntity entity = null;
 		String userId = responseDetails.getUserId();
@@ -39,6 +38,7 @@ public class IncidentResponseServiceImpl implements IIncidentResponseService {
 			teamIdVSUserIdVsResponseTime.put(teamId, map);
 			entity = new IncidentResponseEntity();
 		} else {
+			incidentResponseRepository.deleteById(incidentId);
 			String data = existingResponse.get().getTeamIdVsUserIdVsResponseTime();
 			teamIdVSUserIdVsResponseTime = convertStringToMap(data);
 			Map<String, Integer> map = teamIdVSUserIdVsResponseTime.get(teamId);
