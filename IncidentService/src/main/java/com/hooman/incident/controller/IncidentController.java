@@ -1,12 +1,15 @@
 package com.hooman.incident.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.Assert;
@@ -16,14 +19,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 import com.hooman.incident.entity.Incident;
+import com.hooman.incident.push.notification.HeaderRequestInterceptor;
 import com.hooman.incident.request.IncidentRequest;
 import com.hooman.incident.request.ResponseDetails;
 import com.hooman.incident.response.IncidentDetails;
 import com.hooman.incident.response.IncidentResponseData;
 import com.hooman.incident.response.IncidentResponseDetails;
+import com.hooman.incident.response.Team;
 import com.hooman.incident.response.TeamIncidentResponseData;
+import com.hooman.incident.response.User;
 import com.hooman.incident.service.api.IIncidentResponseService;
 import com.hooman.incident.service.api.IIncidentService;
 
@@ -157,10 +164,14 @@ public class IncidentController {
 	@RequestMapping(value = "/incident/getAllIncidentAssignedToTeams", method = RequestMethod.GET)
 	TeamIncidentResponseData getAllIncidentAssignedToTeams(
 			@RequestHeader(name = "Authorization") String authenticationToken,
-			@RequestParam("tenantId") Integer tenantId, @RequestParam("teamIds") List<String> teamIds) {
+			@RequestParam("tenantId") Integer tenantId) {
 		logger.info("request to get all incidents assigned to a team received");
 		// Assert.notNull(tenantId, "incidentId cannot be null");
-		Assert.notNull(teamIds, "list cannot be null");
+//		Assert.notNull(teamIds, "list cannot be null");
+
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		List<String> teamIds = getAllTeamsOfUser(authentication.getName(), tenantId);
+
 		TeamIncidentResponseData data = new TeamIncidentResponseData();
 		for (String teamId : teamIds) {
 			List<IncidentDetails> allIncidentAssignedToTeam = incidentService.getAllIncidentAssignedToTeam(tenantId,
@@ -236,5 +247,28 @@ public class IncidentController {
 		return incidentResponseService.getAllResponsesForIncidentIdByUserIdTeamId(tenantId, userId, teamId,
 				listOfIncidentIds);
 
+	}
+
+	private List<String> getAllTeamsOfUser(String userId, Integer tenantId) {
+		RestTemplate restTemplate = new RestTemplate();
+
+		ArrayList<ClientHttpRequestInterceptor> interceptors = new ArrayList<>();
+		interceptors.add(new HeaderRequestInterceptor("Authorization",
+				"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NTMyMzYzNzEsInVzZXJfbmFtZSI6InNodWJoYW1AZGV2bm93LmlvIiwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiJdLCJqdGkiOiJiZDAxY2EzMC1hMDAwLTQ2OWEtODM0NC1mZGE2YWQ3MTE3NzIiLCJjbGllbnRfaWQiOiJ3ZWJDbGllbnRJZFBhc3N3b3JkIiwic2NvcGUiOlsiaW5jaWRlbnQiLCJyZWFkIiwidGVhbSIsInVzZXIiLCJ3cml0ZSJdfQ.0Mi02D-vXFHgZgyJGu5NU-m6UXh9paCY-nbygI09-pA"));
+		interceptors.add(new HeaderRequestInterceptor("Content-Type", "application/json"));
+		interceptors.add(new HeaderRequestInterceptor("Tenant-Id", tenantId + ""));
+		restTemplate.setInterceptors(interceptors);
+
+		Map<String, Object> params = new HashMap<>();
+		params.put("id", userId);
+		ResponseEntity<User> user = restTemplate.getForEntity("http://localhost:8081/UserManagement/user/{id}",
+				User.class, params);
+
+		List<String> teams = new ArrayList<>();
+		for (Team team : user.getBody().getTeams()) {
+			teams.add(team.getId().toString());
+		}
+
+		return teams;
 	}
 }
