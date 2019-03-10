@@ -23,6 +23,7 @@ import com.hooman.incident.request.ResponseDetails;
 import com.hooman.incident.response.IncidentDetails;
 import com.hooman.incident.response.IncidentResponseData;
 import com.hooman.incident.response.IncidentResponseDetails;
+import com.hooman.incident.response.TeamIncidentResponseData;
 import com.hooman.incident.service.api.IIncidentResponseService;
 import com.hooman.incident.service.api.IIncidentService;
 
@@ -147,6 +148,26 @@ public class IncidentController {
 		// Assert.notNull(tenantId, "incidentId cannot be null");
 		Assert.notNull(teamId, "incidentId cannot be null");
 		return incidentService.getAllIncidentAssignedToTeam(tenantId, teamId);
+	}
+
+	@ApiOperation(value = "get all incidents assigned to list of teamIds", response = Iterable.class, tags = "getAllIncidentAssignedToTeams")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Success|OK"),
+			@ApiResponse(code = 401, message = "not authorized!"), @ApiResponse(code = 403, message = "forbidden!!!"),
+			@ApiResponse(code = 404, message = "not found!!!") })
+	@RequestMapping(value = "/incident/getAllIncidentAssignedToTeams", method = RequestMethod.GET)
+	TeamIncidentResponseData getAllIncidentAssignedToTeams(
+			@RequestHeader(name = "Authorization") String authenticationToken,
+			@RequestParam("tenantId") Integer tenantId, @RequestParam("teamIds") List<String> teamIds) {
+		logger.info("request to get all incidents assigned to a team received");
+		// Assert.notNull(tenantId, "incidentId cannot be null");
+		Assert.notNull(teamIds, "list cannot be null");
+		TeamIncidentResponseData data = new TeamIncidentResponseData();
+		for (String teamId : teamIds) {
+			List<IncidentDetails> allIncidentAssignedToTeam = incidentService.getAllIncidentAssignedToTeam(tenantId,
+					teamId);
+			data.getTeamIdVsListOfIncidentDetails().put(teamId, allIncidentAssignedToTeam);
+		}
+		return data;
 	}
 
 	@ApiOperation(value = "get all response time for an incident", response = IncidentResponseData.class, tags = "getAllResponseTimeForIncident")
