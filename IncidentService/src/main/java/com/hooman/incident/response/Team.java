@@ -1,10 +1,17 @@
 package com.hooman.incident.response;
 
+import java.io.Serializable;
+
 /**
  * @author shubham.agarwal
  *
  */
-public class Team {
+public class Team implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	private Long id;
 
@@ -33,6 +40,33 @@ public class Team {
 		this.id = id;
 		this.tenantId = tenantId;
 		this.title = title;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	/**
+	 * @param tenantId the tenantId to set
+	 */
+	public void setTenantId(Integer tenantId) {
+		this.tenantId = tenantId;
+	}
+
+	/**
+	 * @param title the title to set
+	 */
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	/**
+	 * 
+	 */
+	public Team() {
 	}
 
 }

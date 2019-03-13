@@ -50,8 +50,56 @@ public class User implements Serializable {
 	}
 
 	public User() {
-		super();
-		// TODO Auto-generated constructor stub
+
+	}
+
+	/**
+	 * @param tenantId the tenantId to set
+	 */
+	public void setTenantId(Integer tenantId) {
+		this.tenantId = tenantId;
+	}
+
+	/**
+	 * @param firstName the firstName to set
+	 */
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	/**
+	 * @param lastName the lastName to set
+	 */
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	/**
+	 * @param role the role to set
+	 */
+	public void setRole(String role) {
+		this.role = role;
+	}
+
+	/**
+	 * @param username the username to set
+	 */
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	/**
+	 * @param photoUrl the photoUrl to set
+	 */
+	public void setPhotoUrl(String photoUrl) {
+		this.photoUrl = photoUrl;
+	}
+
+	/**
+	 * @param teams the teams to set
+	 */
+	public void setTeams(List<Team> teams) {
+		this.teams = teams;
 	}
 
 	public List<Team> getTeams() {
