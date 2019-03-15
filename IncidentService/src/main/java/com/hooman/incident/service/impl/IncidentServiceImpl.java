@@ -1,6 +1,9 @@
 package com.hooman.incident.service.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -116,18 +119,30 @@ public class IncidentServiceImpl implements IIncidentService {
 		List<Incident> findAllById = incidentRepository.findAllById(allIncidentsAssignedToTeam);
 //		List<IncidentResponseDetails> allIncidentResponsesByUser = getAllIncidentResponsesByUser(tenantId,
 //				allIncidentsAssignedToTeam, userId);
-		List<IncidentDetails> incidentDetails = convertListOfIncidentToIncidentDetails(findAllById);
-
+		List<IncidentDetails> incidentDetails = convertListOfIncidentToIncidentDetails(findAllById, teamId);
+		Collections.sort(incidentDetails);
+//		Collections.sort(incidentDetails, new Comparator<IncidentDetails>() {
+//
+//			@Override
+//			public int compare(IncidentDetails o1, IncidentDetails o2) {
+//				if (o1.getDateCreated() > o2.getDateCreated()) {
+//					return 1;
+//				} else {
+//					return 0;
+//				}
+//			}
+//		});
 		return incidentDetails;
 	}
 
-	private List<IncidentDetails> convertListOfIncidentToIncidentDetails(List<Incident> findAllById) {
+	private List<IncidentDetails> convertListOfIncidentToIncidentDetails(List<Incident> findAllById, String teamId) {
 		List<IncidentDetails> list = new ArrayList<>();
 		for (Incident incident : findAllById) {
-			list.add(new IncidentDetails(incident.getTenantId(), incident.getIncidentId(), incident.getUserId(),
+			list.add(new IncidentDetails(incident.getIncidentId(), incident.getTenantId(), incident.getUserId(),
 					incident.getSubject(), incident.getCriteria1(), incident.getCriteria2(), incident.getCriteria3(),
 					incident.getCriteria4(), incident.getCriteria5(), incident.getCriteria6(), incident.getCriteria7(),
-					incident.getCriteria8(), incident.getCriteria9(), incident.getCriteria10(), null));
+					incident.getCriteria8(), incident.getCriteria9(), incident.getCriteria10(), teamId,
+					incident.getDateAdded(), incident.getDateUpdated()));
 		}
 		return list;
 	}
@@ -159,8 +174,8 @@ public class IncidentServiceImpl implements IIncidentService {
 		set.add(assignedTeamEntity2);
 
 //		assignedTeamEntity.setId(identity.getIncidentId());
-		Incident incident = new Incident(tenantId, incidentId, userId, subject, criteria1, criteria2, criteria3,
-				criteria4, criteria5, criteria6, criteria7, criteria8, criteria9, criteria10);
+		Incident incident = new Incident(incidentId, tenantId, userId, subject, criteria1, criteria2, criteria3,
+				criteria4, criteria5, criteria6, criteria7, criteria8, criteria9, criteria10, new Date(), new Date());
 //		assignedTeamEntity.setIncident(incident);
 //		assignedTeamEntity2.setIncident(incident);
 		return incident;

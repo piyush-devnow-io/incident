@@ -1,6 +1,7 @@
 package com.hooman.incident.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -129,9 +130,10 @@ public class IncidentController {
 	}
 
 	private IncidentDetails convertIncidentToIncidentDetail(Incident in) {
-		IncidentDetails inc = new IncidentDetails(in.getTenantId(), in.getIncidentId(), in.getUserId(), in.getSubject(),
+		IncidentDetails inc = new IncidentDetails(in.getIncidentId(), in.getTenantId(), in.getUserId(), in.getSubject(),
 				in.getCriteria1(), in.getCriteria2(), in.getCriteria3(), in.getCriteria4(), in.getCriteria5(),
-				in.getCriteria6(), in.getCriteria7(), in.getCriteria8(), in.getCriteria9(), in.getCriteria10(), null);
+				in.getCriteria6(), in.getCriteria7(), in.getCriteria8(), in.getCriteria9(), in.getCriteria10(), null,
+				in.getDateAdded(), in.getDateUpdated());
 		// TODO Auto-generated method stub
 		return inc;
 	}
@@ -165,6 +167,7 @@ public class IncidentController {
 		for (String teamId : teamIds) {
 			List<IncidentDetails> allIncidentAssignedToTeam = incidentService.getAllIncidentAssignedToTeam(tenantId,
 					teamId);
+			
 			data.getTeamIdVsListOfIncidentDetails().put(teamId, allIncidentAssignedToTeam);
 		}
 		return data;

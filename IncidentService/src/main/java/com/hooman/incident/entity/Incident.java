@@ -1,6 +1,6 @@
 package com.hooman.incident.entity;
 
-import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -62,17 +62,23 @@ public class Incident {
 	@Column(name = "criteria10")
 	String criteria10;
 
-	
+	@Column(name = "date_created")
+	Date dateAdded;
+
+	@Column(name = "date_updated")
+	Date dateUpdated;
+
 	public Incident() {
 		super();
 	}
 
-	public Incident(Integer tenantId, String incidentId, String userId, String subject, String criteria1,
-			String criteria2, String criteria3, String criteria4, String criteria5, String criteria6, String criteria7,
-			String criteria8, String criteria9, String criteria10) {
+	public Incident(@NotNull String incidentId, @NotNull Integer tenantId, String userId, String subject,
+			String criteria1, String criteria2, String criteria3, String criteria4, String criteria5, String criteria6,
+			String criteria7, String criteria8, String criteria9, String criteria10, Date dateAdded,
+			Date dateUpdated) {
 		super();
-		this.tenantId = tenantId;
 		this.incidentId = incidentId;
+		this.tenantId = tenantId;
 		this.userId = userId;
 		this.subject = subject;
 		this.criteria1 = criteria1;
@@ -85,6 +91,8 @@ public class Incident {
 		this.criteria8 = criteria8;
 		this.criteria9 = criteria9;
 		this.criteria10 = criteria10;
+		this.dateAdded = dateAdded;
+		this.dateUpdated = dateUpdated;
 	}
 
 	public String getUserId() {
@@ -197,6 +205,22 @@ public class Incident {
 
 	public void setTenantId(Integer tenantId) {
 		this.tenantId = tenantId;
+	}
+
+	public Date getDateAdded() {
+		return dateAdded;
+	}
+
+	public void setDateAdded(Date dateAdded) {
+		this.dateAdded = dateAdded;
+	}
+
+	public Date getDateUpdated() {
+		return dateUpdated;
+	}
+
+	public void setDateUpdated(Date dateUpdated) {
+		this.dateUpdated = dateUpdated;
 	}
 
 }

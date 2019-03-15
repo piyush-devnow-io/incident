@@ -1,8 +1,8 @@
 package com.hooman.incident.response;
 
-import java.util.List;
+import java.util.Date;
 
-public class IncidentDetails {
+public class IncidentDetails implements Comparable<IncidentDetails> {
 
 	String incidentId;
 
@@ -34,16 +34,21 @@ public class IncidentDetails {
 
 	String assignedTeamId;
 
+	Date dateCreated;
+
+	Date dateUpdated;
+
 	public IncidentDetails() {
 		super();
 	}
 
-	public IncidentDetails(Integer tenantId, String incidentId, String userId, String subject, String criteria1,
+	public IncidentDetails(String incidentId, Integer tenantId, String userId, String subject, String criteria1,
 			String criteria2, String criteria3, String criteria4, String criteria5, String criteria6, String criteria7,
-			String criteria8, String criteria9, String criteria10, String assignedTeamId) {
+			String criteria8, String criteria9, String criteria10, String assignedTeamId, Date dateCreated,
+			Date dateUpdated) {
 		super();
-		this.tenantId = tenantId;
 		this.incidentId = incidentId;
+		this.tenantId = tenantId;
 		this.userId = userId;
 		this.subject = subject;
 		this.criteria1 = criteria1;
@@ -57,6 +62,8 @@ public class IncidentDetails {
 		this.criteria9 = criteria9;
 		this.criteria10 = criteria10;
 		this.assignedTeamId = assignedTeamId;
+		this.dateCreated = dateCreated;
+		this.dateUpdated = dateUpdated;
 	}
 
 	public String getUserId() {
@@ -177,6 +184,28 @@ public class IncidentDetails {
 
 	public void setAssignedTeamId(String assignedTeamId) {
 		this.assignedTeamId = assignedTeamId;
+	}
+
+	public Date getDateCreated() {
+		return dateCreated;
+	}
+
+	public void setDateCreated(Date dateCreated) {
+		this.dateCreated = dateCreated;
+	}
+
+	public Date getDateUpdated() {
+		return dateUpdated;
+	}
+
+	public void setDateUpdated(Date dateUpdated) {
+		this.dateUpdated = dateUpdated;
+	}
+
+	@Override
+	public int compareTo(IncidentDetails o) {
+		return (this.getDateCreated().getTime() < o.getDateCreated().getTime() ? -1
+				: (this.getDateCreated().getTime() == o.getDateCreated().getTime() ? 0 : 1));
 	}
 
 }
