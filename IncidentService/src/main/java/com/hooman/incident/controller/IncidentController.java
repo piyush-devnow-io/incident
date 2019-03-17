@@ -139,7 +139,7 @@ public class IncidentController {
 		IncidentDetails inc = new IncidentDetails(in.getIncidentId(), in.getTenantId(), in.getUserId(), in.getSubject(),
 				in.getCriteria1(), in.getCriteria2(), in.getCriteria3(), in.getCriteria4(), in.getCriteria5(),
 				in.getCriteria6(), in.getCriteria7(), in.getCriteria8(), in.getCriteria9(), in.getCriteria10(), null,
-				in.getDateAdded(), in.getDateUpdated());
+				in.getDateAdded().getTime(), in.getDateUpdated().getTime());
 		// TODO Auto-generated method stub
 		return inc;
 	}
@@ -158,7 +158,7 @@ public class IncidentController {
 		return incidentService.getAllIncidentAssignedToTeam(tenantId, teamId);
 	}
 
-		@ApiOperation(value = "get all incidents assigned to list of teamIds", response = Iterable.class, tags = "getAllIncidentAssignedToTeams")
+	@ApiOperation(value = "get all incidents assigned to list of teamIds", response = Iterable.class, tags = "getAllIncidentAssignedToTeams")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Success|OK"),
 			@ApiResponse(code = 401, message = "not authorized!"), @ApiResponse(code = 403, message = "forbidden!!!"),
 			@ApiResponse(code = 404, message = "not found!!!") })
@@ -174,8 +174,8 @@ public class IncidentController {
 		List<String> teamIds = getAllTeamsOfUser(authentication.getName(), tenantId);
 
 		TeamIncidentResponseData data = new TeamIncidentResponseData();
-		if(data.getTeamIdVsListOfIncidentDetails() == null){
-		 	data.setTeamIdVsListOfIncidentDetails(new HashMap<String,List<IncidentDetails>>());	
+		if (data.getTeamIdVsListOfIncidentDetails() == null) {
+			data.setTeamIdVsListOfIncidentDetails(new HashMap<String, List<IncidentDetails>>());
 		}
 		for (String teamId : teamIds) {
 			List<IncidentDetails> allIncidentAssignedToTeam = incidentService.getAllIncidentAssignedToTeam(tenantId,
@@ -265,7 +265,7 @@ public class IncidentController {
 
 		Map<String, Object> params = new HashMap<>();
 		params.put("id", userId);
-		ResponseEntity<User> user = restTemplate.getForEntity("http://localhost:8081/UserManagement/user/{id}",
+		ResponseEntity<User> user = restTemplate.getForEntity("http://3.90.159.103:8081/UserManagement/user/{id}",
 				User.class, params);
 
 		List<String> teams = new ArrayList<>();

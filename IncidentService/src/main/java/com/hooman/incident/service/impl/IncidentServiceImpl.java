@@ -142,7 +142,7 @@ public class IncidentServiceImpl implements IIncidentService {
 					incident.getSubject(), incident.getCriteria1(), incident.getCriteria2(), incident.getCriteria3(),
 					incident.getCriteria4(), incident.getCriteria5(), incident.getCriteria6(), incident.getCriteria7(),
 					incident.getCriteria8(), incident.getCriteria9(), incident.getCriteria10(), teamId,
-					incident.getDateAdded(), incident.getDateUpdated()));
+					incident.getDateAdded().getTime(), incident.getDateUpdated().getTime()));
 		}
 		return list;
 	}
@@ -251,4 +251,4 @@ public class IncidentServiceImpl implements IIncidentService {
 		return usernames.getBody();
 	}
 
-} 
+}

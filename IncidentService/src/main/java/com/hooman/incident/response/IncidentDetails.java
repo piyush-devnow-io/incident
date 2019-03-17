@@ -34,9 +34,9 @@ public class IncidentDetails implements Comparable<IncidentDetails> {
 
 	String assignedTeamId;
 
-	Date dateCreated;
+	Long dateCreated;
 
-	Date dateUpdated;
+	Long dateUpdated;
 
 	public IncidentDetails() {
 		super();
@@ -44,8 +44,8 @@ public class IncidentDetails implements Comparable<IncidentDetails> {
 
 	public IncidentDetails(String incidentId, Integer tenantId, String userId, String subject, String criteria1,
 			String criteria2, String criteria3, String criteria4, String criteria5, String criteria6, String criteria7,
-			String criteria8, String criteria9, String criteria10, String assignedTeamId, Date dateCreated,
-			Date dateUpdated) {
+			String criteria8, String criteria9, String criteria10, String assignedTeamId, Long dateCreated,
+			Long dateUpdated) {
 		super();
 		this.incidentId = incidentId;
 		this.tenantId = tenantId;
@@ -186,26 +186,27 @@ public class IncidentDetails implements Comparable<IncidentDetails> {
 		this.assignedTeamId = assignedTeamId;
 	}
 
-	public Date getDateCreated() {
+	public Long getDateCreated() {
+
 		return dateCreated;
 	}
 
-	public void setDateCreated(Date dateCreated) {
+	public void setDateCreated(Long dateCreated) {
 		this.dateCreated = dateCreated;
 	}
 
-	public Date getDateUpdated() {
+	public Long getDateUpdated() {
 		return dateUpdated;
 	}
 
-	public void setDateUpdated(Date dateUpdated) {
+	public void setDateUpdated(Long dateUpdated) {
 		this.dateUpdated = dateUpdated;
 	}
 
 	@Override
 	public int compareTo(IncidentDetails o) {
-		return (this.getDateCreated().getTime() < o.getDateCreated().getTime() ? -1
-				: (this.getDateCreated().getTime() == o.getDateCreated().getTime() ? 0 : 1));
+		return (this.getDateCreated() < o.getDateCreated() ? -1
+				: (this.getDateCreated() == o.getDateCreated() ? 0 : 1));
 	}
 
 }
