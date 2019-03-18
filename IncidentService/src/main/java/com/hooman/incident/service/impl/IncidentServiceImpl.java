@@ -2,7 +2,6 @@ package com.hooman.incident.service.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -207,7 +206,8 @@ public class IncidentServiceImpl implements IIncidentService {
 			if (user != null && !"".equalsIgnoreCase((String) user)) {
 				List tokens = getAppTokens((String) user, tenantId);
 				for (Object token : tokens)
-					notificationSender.send("IncidentAssigned", incidentId, map, (String) token);
+					notificationSender.send("IncidentAssigned", incidentId, map, ((Token) token).getToken(),
+							((Token) token).getType());
 			}
 		}
 	}
