@@ -201,11 +201,12 @@ public class IncidentServiceImpl implements IIncidentService {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("incidentId", incidentId);
 		map.put("teamId", teamId);
-		List users = getAllUsersOfTeam(teamId, tenantId);
+		@SuppressWarnings("unchecked")
+		List<Token> users = getAllUsersOfTeam(teamId, tenantId);
 		for (Object user : users) {
 			if (user != null && !"".equalsIgnoreCase((String) user)) {
-				List tokens = getAppTokens((String) user, tenantId);
-				for (Object token : tokens)
+				List<Token> tokens = getAppTokens((String) user, tenantId);
+				for (Token token : tokens)
 					notificationSender.send("IncidentAssigned", incidentId, map, ((Token) token).getToken(),
 							((Token) token).getType());
 			}
@@ -216,7 +217,8 @@ public class IncidentServiceImpl implements IIncidentService {
 	 * @param userId
 	 * @return
 	 */
-	private List getAppTokens(String userId, Integer tenantId) {
+	@SuppressWarnings("unchecked")
+	private List<Token> getAppTokens(String userId, Integer tenantId) {
 		RestTemplate restTemplate = new RestTemplate();
 
 		ArrayList<ClientHttpRequestInterceptor> interceptors = new ArrayList<>();
@@ -229,8 +231,9 @@ public class IncidentServiceImpl implements IIncidentService {
 		Map<String, Object> params = new HashMap<>();
 		params.put("username", userId);
 		System.out.println("going for username " + userId);
-		ResponseEntity<List> userTokens = restTemplate
-				.getForEntity("http://localhost:8081/UserManagement/user/{username}/getAppTokens", List.class, params);
+		ResponseEntity<List<Token>> userTokens = restTemplate.getForEntity(
+				"http://localhost:8081/UserManagement/user/{username}/getAppTokens",
+				(Class<List<Token>>) (Object) List.class, params);
 		return userTokens.getBody();
 	}
 
