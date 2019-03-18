@@ -10,6 +10,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.stereotype.Service;
@@ -231,9 +233,10 @@ public class IncidentServiceImpl implements IIncidentService {
 		Map<String, Object> params = new HashMap<>();
 		params.put("username", userId);
 		System.out.println("going for username " + userId);
-		ResponseEntity<List<Token>> userTokens = restTemplate.getForEntity(
-				"http://localhost:8081/UserManagement/user/{username}/getAppTokens",
-				(Class<List<Token>>) (Object) List.class, params);
+		ResponseEntity<List<Token>> userTokens = restTemplate.exchange(
+				"http://3.90.159.103:8081/UserManagement/user/{username}/getAppTokens", HttpMethod.GET, null,
+				new ParameterizedTypeReference<List<Token>>() {
+				}, params);
 		return userTokens.getBody();
 	}
 
