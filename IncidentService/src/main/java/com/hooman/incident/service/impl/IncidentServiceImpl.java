@@ -116,7 +116,7 @@ public class IncidentServiceImpl implements IIncidentService {
 		List<Incident> findAllById = incidentRepository.findAllById(allIncidentsAssignedToTeam);
 //		List<IncidentResponseDetails> allIncidentResponsesByUser = getAllIncidentResponsesByUser(tenantId,
 //				allIncidentsAssignedToTeam, userId);
-		List<IncidentDetails> incidentDetails = convertListOfIncidentToIncidentDetails(findAllById);
+		List<IncidentDetails> incidentDetails = convertListOfIncidentToIncidentDetails(findAllById,teamId);
 
 		return incidentDetails;
 	}
@@ -127,7 +127,7 @@ public class IncidentServiceImpl implements IIncidentService {
 			list.add(new IncidentDetails(incident.getTenantId(), incident.getIncidentId(), incident.getUserId(),
 					incident.getSubject(), incident.getCriteria1(), incident.getCriteria2(), incident.getCriteria3(),
 					incident.getCriteria4(), incident.getCriteria5(), incident.getCriteria6(), incident.getCriteria7(),
-					incident.getCriteria8(), incident.getCriteria9(), incident.getCriteria10(), null));
+					incident.getCriteria8(), incident.getCriteria9(), incident.getCriteria10(), teamId));
 		}
 		return list;
 	}

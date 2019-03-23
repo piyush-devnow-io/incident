@@ -173,6 +173,9 @@ public class IncidentController {
 		List<String> teamIds = getAllTeamsOfUser(authentication.getName(), tenantId);
 
 		TeamIncidentResponseData data = new TeamIncidentResponseData();
+		if(data.getTeamIdVsListOfIncidentDetails() == null){
+		 	data.setTeamIdVsListOfIncidentDetails(new HashMap<String,List<IncidentDetails>>());	
+		}
 		for (String teamId : teamIds) {
 			List<IncidentDetails> allIncidentAssignedToTeam = incidentService.getAllIncidentAssignedToTeam(tenantId,
 					teamId);
