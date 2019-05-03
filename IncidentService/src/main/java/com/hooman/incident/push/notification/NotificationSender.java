@@ -84,6 +84,7 @@ public class NotificationSender {
 			for (Map.Entry<String, String> entry : dataMap.entrySet()) {
 				data.put(entry.getKey(), entry.getValue());
 			}
+			logger.info("sending to token " + token);
 
 			body.put(NOTIFICATION, notification);
 			body.put(DATA, data);

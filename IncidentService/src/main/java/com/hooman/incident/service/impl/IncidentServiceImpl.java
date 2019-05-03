@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -17,6 +19,7 @@ import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.hooman.incident.controller.IncidentController;
 import com.hooman.incident.entity.Incident;
 import com.hooman.incident.entity.IncidentAssignedTeamEntity;
 import com.hooman.incident.push.notification.HeaderRequestInterceptor;
@@ -42,6 +45,8 @@ public class IncidentServiceImpl implements IIncidentService {
 
 	@Autowired
 	IncidentAssignedTeamRepository incidentAssignedTeamRepository;
+
+	private static final Logger logger = LoggerFactory.getLogger(IncidentServiceImpl.class);
 
 	@Override
 	public Incident createNewIncident(Integer tenantId, String userId, String subject, String criteria1,
@@ -200,17 +205,23 @@ public class IncidentServiceImpl implements IIncidentService {
 	}
 
 	private void sendAssignmentNotification(String incidentId, Integer tenantId, String teamId) throws Exception {
+		logger.info("sending assignment notification to teamId" + teamId);
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("incidentId", incidentId);
 		map.put("teamId", teamId);
 		@SuppressWarnings("unchecked")
 		List<Token> users = getAllUsersOfTeam(teamId, tenantId);
+		for (Token token : users) {
+			logger.info("sending assignment notification to token " + token.getToken());
+		}
 		for (Object user : users) {
 			if (user != null && !"".equalsIgnoreCase((String) user)) {
 				List<Token> tokens = getAppTokens((String) user, tenantId);
-				for (Token token : tokens)
+				for (Token token : tokens) {
+					logger.info("sending notification for token " + ((Token) token).getToken());
 					notificationSender.send("IncidentAssigned", incidentId, map, ((Token) token).getToken(),
 							((Token) token).getType());
+				}
 			}
 		}
 	}
