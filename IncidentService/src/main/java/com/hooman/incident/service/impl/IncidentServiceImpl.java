@@ -209,6 +209,7 @@ public class IncidentServiceImpl implements IIncidentService {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("incidentId", incidentId);
 		map.put("teamId", teamId);
+		logger.info("going to get all users for team" + teamId);
 		@SuppressWarnings("unchecked")
 		List<Token> users = getAllUsersOfTeam(teamId, tenantId);
 		for (Token token : users) {
@@ -232,6 +233,7 @@ public class IncidentServiceImpl implements IIncidentService {
 	 */
 	@SuppressWarnings("unchecked")
 	private List<Token> getAppTokens(String userId, Integer tenantId) {
+		logger.info("going to get apptokens for userId " + userId + " and tenand Id " + tenantId);
 		RestTemplate restTemplate = new RestTemplate();
 
 		ArrayList<ClientHttpRequestInterceptor> interceptors = new ArrayList<>();
@@ -248,6 +250,7 @@ public class IncidentServiceImpl implements IIncidentService {
 				"http://3.90.159.103:8081/UserManagement/user/{username}/getAppTokens", HttpMethod.GET, null,
 				new ParameterizedTypeReference<List<Token>>() {
 				}, params);
+		logger.info("list of tokens is " + userTokens.getBody());
 		return userTokens.getBody();
 	}
 
@@ -265,6 +268,7 @@ public class IncidentServiceImpl implements IIncidentService {
 		params.put("id", teamId);
 		ResponseEntity<List> usernames = restTemplate
 				.getForEntity("http://localhost:8081/UserManagement/team/{id}/getAllUsernames", List.class, params);
+		logger.info("all users are  " + usernames.getBody());
 		return usernames.getBody();
 	}
 
