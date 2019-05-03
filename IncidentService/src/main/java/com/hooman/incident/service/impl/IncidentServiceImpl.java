@@ -66,6 +66,7 @@ public class IncidentServiceImpl implements IIncidentService {
 			try {
 				sendAssignmentNotification(incidentId, tenantId, teamId);
 			} catch (Exception e) {
+				logger.error("error while sending notification " + e.getMessage());
 				e.printStackTrace();
 			}
 		}
