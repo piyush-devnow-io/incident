@@ -211,10 +211,8 @@ public class IncidentServiceImpl implements IIncidentService {
 		map.put("teamId", teamId);
 		logger.info("going to get all users for team" + teamId);
 		@SuppressWarnings("unchecked")
-		List<Token> users = getAllUsersOfTeam(teamId, tenantId);
-		for (Token token : users) {
-			logger.info("sending assignment notification to token " + token.getToken());
-		}
+		List users = getAllUsersOfTeam(teamId, tenantId);
+		
 		for (Object user : users) {
 			if (user != null && !"".equalsIgnoreCase((String) user)) {
 				List<Token> tokens = getAppTokens((String) user, tenantId);
