@@ -19,7 +19,6 @@ import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.hooman.incident.controller.IncidentController;
 import com.hooman.incident.entity.Incident;
 import com.hooman.incident.entity.IncidentAssignedTeamEntity;
 import com.hooman.incident.push.notification.HeaderRequestInterceptor;
@@ -64,7 +63,7 @@ public class IncidentServiceImpl implements IIncidentService {
 			entity.setTeamId(teamId);
 			incidentAssignedTeamRepository.save(entity);
 			try {
-				sendAssignmentNotification(incidentId, tenantId, teamId);
+				sendAssignmentNotification(incidentId, tenantId, teamId, criteria1);
 			} catch (Exception e) {
 				logger.error("error while sending notification " + e.getMessage());
 				e.printStackTrace();
@@ -205,11 +204,13 @@ public class IncidentServiceImpl implements IIncidentService {
 		return map;
 	}
 
-	private void sendAssignmentNotification(String incidentId, Integer tenantId, String teamId) throws Exception {
+	private void sendAssignmentNotification(String incidentId, Integer tenantId, String teamId, String criteria1)
+			throws Exception {
 		logger.info("sending assignment notification to teamId" + teamId);
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("incidentId", incidentId);
 		map.put("teamId", teamId);
+		map.put("message", criteria1);
 		logger.info("going to get all users for team" + teamId);
 		@SuppressWarnings("unchecked")
 		List users = getAllUsersOfTeam(teamId, tenantId);
