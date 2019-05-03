@@ -212,7 +212,7 @@ public class IncidentServiceImpl implements IIncidentService {
 		logger.info("going to get all users for team" + teamId);
 		@SuppressWarnings("unchecked")
 		List users = getAllUsersOfTeam(teamId, tenantId);
-		
+		logger.info("going to iterate users");
 		for (Object user : users) {
 			if (user != null && !"".equalsIgnoreCase((String) user)) {
 				List<Token> tokens = getAppTokens((String) user, tenantId);
