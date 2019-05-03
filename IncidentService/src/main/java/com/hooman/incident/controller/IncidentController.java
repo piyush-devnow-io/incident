@@ -258,7 +258,7 @@ public class IncidentController {
 
 		ArrayList<ClientHttpRequestInterceptor> interceptors = new ArrayList<>();
 		interceptors.add(new HeaderRequestInterceptor("Authorization",
-				"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NTYyNzg3NTUsInVzZXJfbmFtZSI6InNodWJoYW1AZGV2bm93LmlvIiwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiJdLCJqdGkiOiIwNDY5YzZhNy0wNDU0LTRmNDAtOGI5Yi00MWViZWQ4MDUwOTciLCJjbGllbnRfaWQiOiJtb2JpbGVDbGllbnRJZFBhc3N3b3JkIiwic2NvcGUiOlsiaW5jaWRlbnQiLCJyZWFkIiwidGVhbSIsInVzZXIiLCJ3cml0ZSJdfQ.XJW-HOq2CoNj7cwGPSPOWjErC6jjkR2wNkVlZBeb3YI"));
+				"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1ODI3NDI4NTksInVzZXJfbmFtZSI6InNodWJoYW1AZGV2bm93LmlvIiwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiJdLCJqdGkiOiJlM2Q3ZDdhNi03ZDcxLTQwNzMtOWY5YS1iNzJiODE0MWJiOGIiLCJjbGllbnRfaWQiOiJ3ZWJDbGllbnRJZFBhc3N3b3JkIiwic2NvcGUiOlsiaW5jaWRlbnQiLCJyZWFkIiwidGVhbSIsInVzZXIiLCJ3cml0ZSJdfQ.uLWaMJT7k4fuxVp3hJyXCB5OWiInHxCT7N_glWMuQN4"));
 		interceptors.add(new HeaderRequestInterceptor("Content-Type", "application/json"));
 		interceptors.add(new HeaderRequestInterceptor("Tenant-Id", tenantId + ""));
 		restTemplate.setInterceptors(interceptors);
